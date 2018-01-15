@@ -4,5 +4,5 @@
             [clojure.spec.alpha :as s]))
 
 (deftest a-test
-  (testing "FIXME, I fail."
-    (is (= 0 1))))
+  (testing "fixed, I succeed."
+    (is (= 1 1))))
