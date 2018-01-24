@@ -2,18 +2,22 @@
   (:require [clojure.test :refer :all]))
 
 (defn string-to-int-seq
+  "converts a string to a sequence of integers"
   [x]
   (map #(Character/digit % 10) (seq x)))
 
 (defn couples-from
+  "returns a lazy sequence of the couples made from an element and his next (wrapping around the end of the sequence)"
   [x]
   (take (count x) (partition 2 1 (cycle x))))
 
 (defn first-when-all-equal
+  "Returns the first if all the elements are the same, zero otherwise"
   [x]
   (if (apply = x) (first x) 0))
 
 (defn captcha
+  "captcha"
   [x]
   (reduce + 0 (map #(first-when-all-equal %) (couples-from (string-to-int-seq x)))))
 
@@ -29,3 +33,5 @@
   (testing "the only digit that matches the next one is the last digit, 9."
     (is (= (captcha "91212129") 9))))
 
+(deftest day-2-test
+  )
