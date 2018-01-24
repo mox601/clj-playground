@@ -1,11 +1,17 @@
 (ns clj-playground.advent-code-test
   (:require [clojure.test :refer :all]))
 
-(defn string-to-int-seq [x] (map #(Character/digit % 10) (seq x)))
+(defn string-to-int-seq
+  [x]
+  (map #(Character/digit % 10) (seq x)))
 
-(defn couples-from [x] (take (count x) (partition 2 1 (cycle x))))
+(defn couples-from
+  [x]
+  (take (count x) (partition 2 1 (cycle x))))
 
-(defn first-when-all-equal [x] (if (apply = x) (first x) 0))
+(defn first-when-all-equal
+  [x]
+  (if (apply = x) (first x) 0))
 
 (defn captcha
   [x]
