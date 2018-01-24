@@ -33,5 +33,12 @@
   (testing "the only digit that matches the next one is the last digit, 9."
     (is (= (captcha "91212129") 9))))
 
+(defn checksum
+  [x]
+  1)
+
 (deftest day-2-test
-  )
+  (testing
+      (is (= (checksum "5 1 9 5
+7 5 3
+2 4 6 8") 18))))
