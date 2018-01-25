@@ -1,5 +1,6 @@
 (ns clj-playground.advent-code-test
-  (:require [clojure.test :refer :all]))
+  (:require [clojure.test :refer :all])
+  (:require [clojure.string :as s]))
 
 (defn string-to-int-seq
   "converts a string to a sequence of integers"
@@ -33,11 +34,11 @@
   (testing "the only digit that matches the next one is the last digit, 9."
     (is (= (captcha "91212129") 9))))
 
-(defn checksum
+(defn split-lines-and-items
   [x]
-  1)
+  (map #(s/split % #"\t") (s/split-lines x)))
 
-;; (def x [1 3 1])
+;;(split-lines-and-items "a\tb\tc\nd\te\tf")
 
 (defn max-and-min
   [x]
@@ -46,6 +47,11 @@
 (defn difference-between-max-and-min
   [x]
   (apply - (max-and-min x)))
+
+(defn checksum
+  [x]
+  (apply + (difference-between-max-and-min
+            (split-lines-and-items x))))
 
 (deftest day-2-test
   (testing
