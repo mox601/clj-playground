@@ -37,8 +37,28 @@
   [x]
   1)
 
+;; (def x [1 3 1])
+
+(defn max-and-min
+  [x]
+  [(apply max x) (apply min x)])
+
+(defn difference-between-max-and-min
+  [x]
+  (apply - (max-and-min x)))
+
 (deftest day-2-test
+  (testing
+      (is (= (difference-between-max-and-min [5 1 9 5]) 8)))
+  (testing
+      (is (= (difference-between-max-and-min [7 5 3]) 4)))
+  (testing
+      (is (= (difference-between-max-and-min [2 4 6 8]) 6)))
   (testing
       (is (= (checksum "5 1 9 5
 7 5 3
 2 4 6 8") 18))))
+
+
+
+
