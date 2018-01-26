@@ -41,14 +41,17 @@
   [x]
   (map #(s/split % #"\s+") (s/split-lines x)))
 
+
 (defn max-and-min
   [x]
   [(apply max x) (apply min x)])
 
+;;(def x "")
 (defn difference-between-max-and-min
   [x]
   (apply - (max-and-min x)))
 
+;; (def x "")
 (defn difference-between-max-and-min-tbl
   [x]
   (map difference-between-max-and-min x))
@@ -56,7 +59,7 @@
 (defn checksum
   [x]
   (difference-between-max-and-min-tbl
-            (split-lines-and-items "5\t6\n7\t8")))
+            (split-lines-and-items x)))
 
 (deftest day-2-test
   (testing
