@@ -34,9 +34,12 @@
   (testing "the only digit that matches the next one is the last digit, 9."
     (is (= (captcha "91212129") 9))))
 
+
+;;(def x "5\t6\n7\t8")
+
 (defn split-lines-and-items
   [x]
-  (map (map #(s/split % #"\s+") (s/split-lines x))))
+  (map #(s/split % #"\s+") (s/split-lines x)))
 
 (defn max-and-min
   [x]
@@ -46,14 +49,14 @@
   [x]
   (apply - (max-and-min x)))
 
-;;(defn difference-between-max-and-min-tbl
-;;  [x]
-;;  (map #(apply - %) (map max-and-min x)))
+(defn difference-between-max-and-min-tbl
+  [x]
+  (map difference-between-max-and-min x))
 
 (defn checksum
   [x]
-  (apply + (difference-between-max-and-min
-            (split-lines-and-items x))))
+  (difference-between-max-and-min-tbl
+            (split-lines-and-items "5\t6\n7\t8")))
 
 (deftest day-2-test
   (testing
@@ -66,4 +69,6 @@
       (is (= (checksum "5 1 9 5
 7 5 3
 2 4 6 8") 18))))
+
+
 
