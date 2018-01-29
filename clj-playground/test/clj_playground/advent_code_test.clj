@@ -34,40 +34,31 @@
   (testing "the only digit that matches the next one is the last digit, 9."
     (is (= (captcha "91212129") 9))))
 
-
-;;(def x "5\t6\n7\t8")
 (defn split-lines-and-items
   [x]
   (map #(s/split % #"\s+") (s/split-lines x)))
 
-;;(def x '("1" "2"))
 (defn string-coll-to-int
   [x]
   (map #(Integer/parseInt %) x))
-
-;;(def x '(["1" "2"] ["3" "4"]))
 
 (defn string-matrix-to-int
   [x]
   (map string-coll-to-int x))
 
-;; (def x )
 (defn max-and-min
   [x]
   [(apply max x) (apply min x)])
 
-;;(def x [3 2])
 (defn difference-between-max-and-min
   [x]
   (apply - (max-and-min x)))
 
-;;(def x '([3 2] [5 2]))
 (defn difference-between-max-and-min-tbl
   [x]
   (reduce + 0 (map difference-between-max-and-min x)))
 
-(def x "1\t2\n3\t4")
-
+;;(def x "1\t2\n3\t4")
 (defn checksum
   [x]
   (difference-between-max-and-min-tbl
@@ -103,4 +94,11 @@
 1567	3246	4194	151	3112	903	1575	134	150	4184	3718	4077	180	4307	4097	1705") 32121))))
 
 
+(defn manhattan-distance-to-centre
+  [x]
+  x)
+
+(deftest day-3-test
+  (testing
+      (is (= (manhattan-distance-to-centre 1) 0))))
 
