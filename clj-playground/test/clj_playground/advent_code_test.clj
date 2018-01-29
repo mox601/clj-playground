@@ -100,5 +100,11 @@
 
 (deftest day-3-test
   (testing
-      (is (= (manhattan-distance-to-centre 1) 0))))
+      (is (= (manhattan-distance-to-centre 1) 0)))
+  (testing
+      (is (= (manhattan-distance-to-centre 12) 3)))
+  (testing
+      (is (= (manhattan-distance-to-centre 23) 2)))
+  (testing
+      (is (= (manhattan-distance-to-centre 1024) 31))))
 
