@@ -98,6 +98,9 @@
   [x]
   x)
 
+;; elements in each perimeter: 1, 8, 16, ...
+;; elements in each side: 1, 3, 5, ...  
+
 (deftest day-3-test
   (testing
       (is (= (manhattan-distance-to-centre 1) 0)))
@@ -107,4 +110,10 @@
       (is (= (manhattan-distance-to-centre 23) 2)))
   (testing
       (is (= (manhattan-distance-to-centre 1024) 31))))
+
+
+
+
+
+
 
