@@ -4,8 +4,8 @@
 
 (defn string-to-int-seq
   "converts a string to a sequence of integers"
-  [x]
-  (map #(Character/digit % 10) (seq x)))
+  [str]
+  (map #(Character/digit % 10) (seq str)))
 
 (defn couples-from
   "returns a lazy sequence of the couples made from an element and his next (wrapping around the end of the sequence)"
