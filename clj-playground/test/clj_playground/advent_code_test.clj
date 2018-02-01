@@ -93,17 +93,43 @@
 514	218	209	185	197	137	393	555	588	569	710	537	48	309	519	138
 1567	3246	4194	151	3112	903	1575	134	150	4184	3718	4077	180	4307	4097	1705") 32121))))
 
+;; elements in each perimeter: 1, 8, 16, ...
+;; elements in each side: 1, 3, 5, ...  
+
+(defn max-number-in-perimeter
+  "given the side of a perimeter, it returns the max number found in that perimeter. can only accept odd numbers"
+  [n]
+  (* n n))
+
+(defn perimeter
+  "given a number, returns the dimension of the side of the perimeter it belongs to. can only return odd numbers"
+  [n]
+  n)
+
+(def n 9)
+(def p 3)
+
+;; TODO
+;; amount of movement needed to move toward centre:
+;; amount of movement needed to move toward orthogonal cross: 
+;; ( x - (max item of previous perimeter) ) mod (side of current perimeter quot 2)
+(defn offset
+  "given a number, and the perimeter it belongs to, returns the amount of moves needed to move towards the closest intersection between central axes and the perimeter it belongs to"
+  [n p]
+  (mod (- n (max-number-in-perimeter (- p 2))) p))
 
 (defn manhattan-distance-to-centre
   [x]
   x)
 
-;; elements in each perimeter: 1, 8, 16, ...
-;; elements in each side: 1, 3, 5, ...  
-;; amount of movement needed
-;; ( x - (max previous perimeter) ) mod (side of current perimeter quot 2)
-
-(deftest day-3-test
+  (deftest day-3-test
+    (testing
+        (is (= (max-number-in-perimeter 1) 1)))
+    (testing
+        (is (= (max-number-in-perimeter 3) 9)))
+     (testing
+         (is (= (max-number-in-perimeter 5) 25)))
+    
   (testing
       (is (= (manhattan-distance-to-centre 1) 0)))
   (testing
