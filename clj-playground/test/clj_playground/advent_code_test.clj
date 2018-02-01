@@ -100,6 +100,8 @@
 
 ;; elements in each perimeter: 1, 8, 16, ...
 ;; elements in each side: 1, 3, 5, ...  
+;; amount of movement needed
+;; ( x - (max previous perimeter) ) mod (side of current perimeter quot 2)
 
 (deftest day-3-test
   (testing
