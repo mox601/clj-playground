@@ -112,7 +112,10 @@
 ;; TODO
 ;; amount of movement needed to move toward centre:
 ;; amount of movement needed to move toward orthogonal cross: 
-;; ( x - (max item of previous perimeter) ) mod (side of current perimeter quot 2)
+;; ( x - (max item of previous perimeter) ) mod (side of current perimeter quot 2) <- this is wrong
+;; ( x - maxItemOfPreviousPerimeter + 1 ) mod (side of current perimeter)
+;; maxItemOfPreviousPerimeter + 1 = first element of this perimeter
+
 (defn offset
   "given a number, and the perimeter it belongs to, returns the amount of moves needed to move towards the closest intersection between central axes and the perimeter it belongs to"
   [n p]
