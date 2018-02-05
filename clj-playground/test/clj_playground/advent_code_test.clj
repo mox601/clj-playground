@@ -101,50 +101,64 @@
   [n]
   (* n n))
 
+;; mathematically, the first power of an odd number that is greater than n
 (defn perimeter
-  "given a number, returns the dimension of the side of the perimeter it belongs to. can only return odd numbers"
+  "given a number, returns the dimension of the side of the perimeter it belongs to.
+  can only return odd numbers"
   [n]
-  n)
+  (if (= 1 n)
+    1
+    (+ 2 (int (Math/sqrt (last (take-while #(> n %) (map max-number-in-perimeter (iterate #(+ 2 %) 1)))))))))
 
-(def n 9)
-(def p 3)
+;; (def n 7)
+;; (def p 3)
 
-;; TODO
 ;; amount of movement needed to move toward centre:
-;; amount of movement needed to move toward orthogonal cross: 
-;; ( x - (max item of previous perimeter) ) mod (side of current perimeter quot 2) <- this is wrong
-;; ( x - maxItemOfPreviousPerimeter + 1 ) mod (side of current perimeter)
-;; maxItemOfPreviousPerimeter + 1 = first element of this perimeter
+;; amount of movement needed to move toward orthogonal cross:
+;; ([(x - maxItemofPreviousPerimeter) + 1] mod (side of current perimeter - 1))
 
 (defn offset
   "given a number, and the perimeter it belongs to, returns the amount of moves needed to move towards the closest intersection between central axes and the perimeter it belongs to"
   [n p]
-  (mod (- n (max-number-in-perimeter (- p 2))) p))
+  (mod (inc (- n (max-number-in-perimeter (- p 2)))) (- p 1)))
 
+(def x 12)
 (defn manhattan-distance-to-centre
   [x]
-  x)
+  (+ (offset x (perimeter x)) 1))
 
-  (deftest day-3-test
-    (testing
-        (is (= (max-number-in-perimeter 1) 1)))
-    (testing
-        (is (= (max-number-in-perimeter 3) 9)))
-     (testing
-         (is (= (max-number-in-perimeter 5) 25)))
-    
+(deftest day-3-test
+
   (testing
-      (is (= (manhattan-distance-to-centre 1) 0)))
+      (is (= (max-number-in-perimeter 1) 1)))
   (testing
-      (is (= (manhattan-distance-to-centre 12) 3)))
+      (is (= (max-number-in-perimeter 3) 9)))
+   (testing
+      (is (= (max-number-in-perimeter 5) 25)))
+
   (testing
-      (is (= (manhattan-distance-to-centre 23) 2)))
+      (is (= (offset 3 3) 1)))
   (testing
-      (is (= (manhattan-distance-to-centre 1024) 31))))
+      (is (= (offset 4 3) 0)))
+  (testing
+      (is (= (offset 5 3) 1)))
 
+ (testing
+      (is (= (offset 11 5) 0)))
+  (testing
+      (is (= (offset 12 5) 1)))
+  (testing
+      (is (= (offset 13 5) 2)))
+  
+;  (testing
+;      (is (= (manhattan-distance-to-centre 1) 0)))
+;  (testing
+;      (is (= (manhattan-distance-to-centre 12) 3)))
+;  (testing
+;      (is (= (manhattan-distance-to-centre 23) 2)))
+;  (testing
+;      (is (= (manhattan-distance-to-centre 1024) 31)))
 
-
-
-
+  )
 
 
