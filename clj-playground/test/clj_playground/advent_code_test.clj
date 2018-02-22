@@ -110,6 +110,19 @@
     1
     (+ 2 (int (Math/sqrt (last (take-while #(> n %) (map max-number-in-perimeter (iterate #(+ 2 %) 1)))))))))
 
+(def moves
+  '(:right :up :left :down :right))
+
+(defn quantities
+  "side is odd"
+  [side]
+  (reverse [(dec side) (dec side) (dec side) (- side 2) 1]))
+
+(defn moves-in-square
+  "side is odd"
+  [side]
+  (flatten (map repeat (quantities side) moves)))
+
 ;; (def n 7)
 ;; (def p 3)
 
