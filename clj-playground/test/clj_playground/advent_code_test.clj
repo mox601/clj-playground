@@ -135,6 +135,15 @@
   [n p]
   (mod (inc (- n (max-number-in-perimeter (- p 2)))) (- p 1)))
 
+
+(defn abc
+  ""
+  [size]
+  (flatten
+   (repeat 4 (concat
+              (reverse (range 1 (quot size 2)))
+              (range 0 (inc (quot size 2)))))))
+
 (def x 12)
 (defn manhattan-distance-to-centre
   [x]
