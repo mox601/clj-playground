@@ -124,14 +124,20 @@
   (flatten (map repeat (quantities side) moves)))
 
 (defn offset
-  "given a size of a perimeter, build the sequence of offsets.
+  "side is odd
+  given a side of a perimeter, build the sequence of offsets.
   An element of the sequence is the amount of moves needed
   to move towards the closest intersection between central axes"
-  [size]
+  [side]
   (flatten
    (repeat 4 (concat
-              (reverse (range 1 (quot size 2)))
-              (range 0 (inc (quot size 2)))))))
+              (reverse (range 1 (quot side 2)))
+              (range 0 (inc (quot side 2)))))))
+
+(defn abc
+  "given a number, determine the square side
+  in which the number is found"
+  [n])
 
 (defn manhattan-distance-to-centre
   [x]
