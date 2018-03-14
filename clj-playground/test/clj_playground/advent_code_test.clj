@@ -156,23 +156,22 @@
       (is (= (max-number-in-perimeter 1) 1)))
   (testing
       (is (= (max-number-in-perimeter 3) 9)))
-   (testing
+  (testing
       (is (= (max-number-in-perimeter 5) 25)))
 
   (testing
-      (is (= (offset 3 3) 1)))
+      (is (= (nth (offset 3) 3) 1)))
   (testing
-      (is (= (offset 4 3) 0)))
+      (is (= (nth (offset 3) 4) 0)))
   (testing
-      (is (= (offset 5 3) 1)))
+      (is (= (nth (offset 3) 5) 1)))
 
- (testing
-      (is (= (offset 11 5) 0)))
   (testing
-      (is (= (offset 12 5) 1)))
+      (is (= (nth (offset 5) 13)) 0))
   (testing
-      (is (= (offset 13 5) 2)))
-  
+      (is (= (nth (offset 5) 14)) 1))
+  (testing
+      (is (= (nth (offset 5) 15)) 2))
 ;  (testing
 ;      (is (= (manhattan-distance-to-centre 1) 0)))
 ;  (testing
