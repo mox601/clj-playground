@@ -123,18 +123,6 @@
   [side]
   (flatten (map repeat (quantities side) moves)))
 
-;; (def n 7)
-;; (def p 3)
-
-;; amount of movement needed to move toward centre:
-;; amount of movement needed to move toward orthogonal cross:
-;; ([(x - maxItemofPreviousPerimeter) + 1] mod (side of current perimeter - 1))
-
-(comment (defn offset-wrong
-  "given a number, and the perimeter it belongs to, returns the amount of moves needed to move towards the closest intersection between central axes and the perimeter it belongs to"
-  [n p]
-  (mod (inc (- n (max-number-in-perimeter (- p 2)))) (- p 1))))
-
 (defn offset
   "given a size of a perimeter, build the sequence of offsets.
   An element of the sequence is the amount of moves needed
@@ -145,7 +133,6 @@
               (reverse (range 1 (quot size 2)))
               (range 0 (inc (quot size 2)))))))
 
-(def x 12)
 (defn manhattan-distance-to-centre
   [x]
   (+ (offset x (perimeter x)) 1))
