@@ -109,12 +109,27 @@
   [n]
   (if (= 1 n)
     1
-    (+ 2 (int (Math/sqrt (last (take-while #(> n %) (map max-number-in-perimeter (iterate #(+ 2 %) 1)))))))))
+    (+ 2
+       (int (Math/sqrt (last (take-while #(> n %) (map max-number-in-perimeter (iterate #(+ 2 %) 1)))))))))
 
 (defn take-nth-offset
   "given a number, returns the index to take from the offsets"
   [n]
   (- n (inc (max-number-in-perimeter (- (perimeter n) 2)))))
+
+;;5 is the 3rd odd number
+;;7 is the 4th odd number, and so on
+(defn position-of-odd
+  "given an odd number (the size of the side),
+  return its position in the sequence of all odd numbers"
+  [n]
+  (+ 1 (/ (- n 1) 2)))
+
+(defn moves-on-axes
+  "given a number, return the number of moves needed from the perimeter it belongs to
+  towards the centre"
+  [n]
+  (- (position-of-odd (perimeter n)) 1))
 
 (def moves
   '(:right :up :left :down :right))
@@ -140,9 +155,17 @@
               (reverse (range 1 (quot side 2)))
               (range 0 (inc (quot side 2)))))))
 
+(defn moves-towards-axes
+  "given a number, return the number of lateral moves
+  needed to move towards the horizontal axes"
+  [n]
+  (nth (offsets (perimeter n)) (take-nth-offset n)))
+
 (defn manhattan-distance-to-centre
-  [x]
-  (+ (offsets x (perimeter x)) 1))
+  [n]
+  (if (= 1 n)
+    0
+    (+ (moves-on-axes n) (moves-towards-axes n))))
 
 (deftest day-3-test
 
@@ -166,15 +189,16 @@
       (is (= (nth (offsets 5) 14)) 1))
   (testing
       (is (= (nth (offsets 5) 15)) 2))
-;  (testing
-;      (is (= (manhattan-distance-to-centre 1) 0)))
-;  (testing
-;      (is (= (manhattan-distance-to-centre 12) 3)))
-;  (testing
-;      (is (= (manhattan-distance-to-centre 23) 2)))
-;  (testing
-;      (is (= (manhattan-distance-to-centre 1024) 31)))
-
+  (testing
+      (is (= (manhattan-distance-to-centre 1) 0)))
+  (testing
+      (is (= (manhattan-distance-to-centre 12) 3)))
+  (testing
+      (is (= (manhattan-distance-to-centre 23) 2)))
+  (testing
+      (is (= (manhattan-distance-to-centre 1024) 31)))
+  (testing
+      (is (= (manhattan-distance-to-centre 325489) 552)))
   )
 
 
