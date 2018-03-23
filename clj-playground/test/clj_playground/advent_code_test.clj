@@ -131,18 +131,18 @@
   [n]
   (- (position-of-odd (perimeter n)) 1))
 
-(def moves
-  '(:right :up :left :down :right))
+;(def moves
+;  '(:right :up :left :down :right))
 
-(defn quantities
-  "side is odd"
-  [side]
-  (reverse [(dec side) (dec side) (dec side) (- side 2) 1]))
+;(defn quantities
+;  "side is odd"
+;  [side]
+;  (reverse [(dec side) (dec side) (dec side) (- side 2) 1]))
 
-(defn moves-in-square
-  "side is odd"
-  [side]
-  (flatten (map repeat (quantities side) moves)))
+;(defn moves-in-square
+;  "side is odd"
+;  [side]
+;  (flatten (map repeat (quantities side) moves)))
 
 (defn offsets
   "side is odd
