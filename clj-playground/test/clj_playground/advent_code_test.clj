@@ -134,11 +134,6 @@
               (reverse (range 1 (quot side 2)))
               (range 0 (inc (quot side 2)))))))
 
-(defn abc
-  "given a number, determine the square side
-  in which the number is found"
-  [n])
-
 (defn manhattan-distance-to-centre
   [x]
   (+ (offset x (perimeter x)) 1))
