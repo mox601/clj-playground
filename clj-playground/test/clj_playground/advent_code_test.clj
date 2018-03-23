@@ -1,7 +1,6 @@
 (ns clj-playground.advent-code-test
   (:require [clojure.test :refer :all])
-  (:require [clojure.string :as s])
-  (:require [clojure.math.numeric-tower :as math]))
+  (:require [clojure.string :as s]))
 
 (defn string-to-int-seq
   "converts a string to a sequence of integers"
@@ -100,7 +99,7 @@
 (defn max-number-in-perimeter
   "given the side of a perimeter, it returns the max number found in that perimeter. can only accept odd numbers"
   [n]
-  (math/expt n 2))
+  (* n n))
 
 ;; mathematically, the first power of an odd number that is greater than n
 (defn perimeter
