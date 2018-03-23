@@ -197,7 +197,10 @@
   (testing
       (is (= (manhattan-distance-to-centre 1024) 31)))
   (testing
-      (is (= (manhattan-distance-to-centre 325489) 552)))
-  )
+      (is (= (manhattan-distance-to-centre 325489) 552))))
 
+(deftest day-4-test
+
+  (testing
+      (is (= 1 1))))
 
