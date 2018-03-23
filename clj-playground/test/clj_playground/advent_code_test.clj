@@ -1,6 +1,7 @@
 (ns clj-playground.advent-code-test
   (:require [clojure.test :refer :all])
-  (:require [clojure.string :as s]))
+  (:require [clojure.string :as s])
+  (:require [clojure.math.numeric-tower :as math]))
 
 (defn string-to-int-seq
   "converts a string to a sequence of integers"
@@ -94,12 +95,12 @@
 1567	3246	4194	151	3112	903	1575	134	150	4184	3718	4077	180	4307	4097	1705") 32121))))
 
 ;; elements in each perimeter: 1, 8, 16, ...
-;; elements in each side: 1, 3, 5, ...  
-
+;; elements in each perimeter side: 1, 3, 5, ...  
+;; max number in perimeter: 1, 9, 25, ...
 (defn max-number-in-perimeter
   "given the side of a perimeter, it returns the max number found in that perimeter. can only accept odd numbers"
   [n]
-  (* n n))
+  (math/expt n 2))
 
 ;; mathematically, the first power of an odd number that is greater than n
 (defn perimeter
@@ -109,6 +110,11 @@
   (if (= 1 n)
     1
     (+ 2 (int (Math/sqrt (last (take-while #(> n %) (map max-number-in-perimeter (iterate #(+ 2 %) 1)))))))))
+
+(defn take-nth-offset
+  "given a number, returns the index to take from the offsets"
+  [n]
+  (- n (inc (max-number-in-perimeter (- (perimeter n) 2)))))
 
 (def moves
   '(:right :up :left :down :right))
@@ -123,7 +129,7 @@
   [side]
   (flatten (map repeat (quantities side) moves)))
 
-(defn offset
+(defn offsets
   "side is odd
   given a side of a perimeter, build the sequence of offsets.
   An element of the sequence is the amount of moves needed
@@ -136,7 +142,7 @@
 
 (defn manhattan-distance-to-centre
   [x]
-  (+ (offset x (perimeter x)) 1))
+  (+ (offsets x (perimeter x)) 1))
 
 (deftest day-3-test
 
@@ -148,18 +154,18 @@
       (is (= (max-number-in-perimeter 5) 25)))
 
   (testing
-      (is (= (nth (offset 3) 3) 1)))
+      (is (= (nth (offsets 3) 3) 1)))
   (testing
-      (is (= (nth (offset 3) 4) 0)))
+      (is (= (nth (offsets 3) 4) 0)))
   (testing
-      (is (= (nth (offset 3) 5) 1)))
+      (is (= (nth (offsets 3) 5) 1)))
 
   (testing
-      (is (= (nth (offset 5) 13)) 0))
+      (is (= (nth (offsets 5) 13)) 0))
   (testing
-      (is (= (nth (offset 5) 14)) 1))
+      (is (= (nth (offsets 5) 14)) 1))
   (testing
-      (is (= (nth (offset 5) 15)) 2))
+      (is (= (nth (offsets 5) 15)) 2))
 ;  (testing
 ;      (is (= (manhattan-distance-to-centre 1) 0)))
 ;  (testing
