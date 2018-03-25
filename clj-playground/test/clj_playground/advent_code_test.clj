@@ -200,9 +200,10 @@
       (is (= (manhattan-distance-to-centre 325489) 552))))
 
 (defn passphrase-valid?
+  "split and compare count between distinct and original sequence"
   [p]
-  true)
-
+  (let [w (s/split p #"\s")]
+       (= (count (distinct w)) (count w))))
 
 (def input
   "the input"
@@ -725,8 +726,6 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
       (is (true?  (passphrase-valid? "aa bb cc dd ee")))
       (is (false? (passphrase-valid? "aa bb cc dd aa")))
       (is (true?  (passphrase-valid? "aa bb cc dd aaa")))
-    
-
 
     ))
 
