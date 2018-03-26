@@ -720,12 +720,18 @@ mhvisju lhmdbs tcxied xeidtc ujry cditex gvqpqm
 cgc jazrp crgnna uvuokl uvuokl uoiwl sknmc sknmc
 rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
 
+(defn split-on-newlines
+  ""
+  [s]
+  (s/split s #"\n"))
+
 (deftest day-4-test
 
   (testing
       (is (true?  (passphrase-valid? "aa bb cc dd ee")))
       (is (false? (passphrase-valid? "aa bb cc dd aa")))
       (is (true?  (passphrase-valid? "aa bb cc dd aaa")))
-
+      (is (=      (count (split-on-newlines "a\nb\nc\nd")) 4))
+      (is (=      (count (split-on-newlines input)) 512))
     ))
 
