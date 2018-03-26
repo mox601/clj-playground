@@ -733,5 +733,6 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
       (is (true?  (passphrase-valid? "aa bb cc dd aaa")))
       (is (=      (count (split-on-newlines "a\nb\nc\nd")) 4))
       (is (=      (count (split-on-newlines input)) 512))
+      (is (=      (count (filter passphrase-valid? (split-on-newlines input))) 337))
     ))
 
