@@ -725,14 +725,21 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
   [s]
   (s/split s #"\n"))
 
-(deftest day-4-test
+(defn passphrase-valid-anagrams?
+  []
+  )
 
+(deftest day-4-test
   (testing
       (is (true?  (passphrase-valid? "aa bb cc dd ee")))
       (is (false? (passphrase-valid? "aa bb cc dd aa")))
       (is (true?  (passphrase-valid? "aa bb cc dd aaa")))
       (is (=      (count (split-on-newlines "a\nb\nc\nd")) 4))
       (is (=      (count (split-on-newlines input)) 512))
-      (is (=      (count (filter passphrase-valid? (split-on-newlines input))) 337))
-    ))
+      (is (=      (count (filter passphrase-valid? (split-on-newlines input))) 337)))
+  ;; part 2
+  (testing
+      (is (= true true)))
+
+  )
 
