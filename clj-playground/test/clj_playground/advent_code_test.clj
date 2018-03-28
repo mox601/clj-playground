@@ -1,3 +1,5 @@
+
+
 (ns clj-playground.advent-code-test
   (:require [clojure.test :refer :all])
   (:require [clojure.string :as s]))
@@ -724,6 +726,23 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
   ""
   [s]
   (s/split s #"\n"))
+
+
+(defn remove-first
+  "removes first occurrence of an item from a seq"
+  [x xs]
+  (let [[n m] (split-with (partial not= x) xs)]
+    (concat n (rest m))))
+
+(defn permutations
+  "permutations of a sequence.
+  in case of duplicate items in sequence,
+  it includes duplicate permutations"
+  [s]
+  (lazy-seq
+   (if (seq (rest s))
+     (apply concat (for [x s] (map #(cons x %) (permutations (remove-first x s)))))
+     [s])))
 
 (defn passphrase-valid-anagrams?
   []
