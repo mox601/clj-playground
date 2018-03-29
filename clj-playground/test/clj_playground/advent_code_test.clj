@@ -1,8 +1,7 @@
-
-
 (ns clj-playground.advent-code-test
   (:require [clojure.test :refer :all])
-  (:require [clojure.string :as s]))
+  (:require [clojure.string :as s])
+  (:require [clojure.set :as sets]))
 
 (defn string-to-int-seq
   "converts a string to a sequence of integers"
@@ -743,6 +742,23 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
    (if (seq (rest s))
      (apply concat (for [x s] (map #(cons x %) (permutations (remove-first x s)))))
      [s])))
+
+(defn string-to-chars
+  ""
+  [s]
+  ((comp #(map str %) seq) s))
+
+;; instead of intersection:
+;; lazily add permutations in sequence,
+;; while verifying all items are distinct.
+;; when a duplicate is found, stop. 
+
+(defn intersection-between-permutations
+  ""
+  [s t]
+  (sets/intersection
+   (set (permutations (string-to-chars s)))
+   (set (permutations (string-to-chars t)))))
 
 (defn passphrase-valid-anagrams?
   []
