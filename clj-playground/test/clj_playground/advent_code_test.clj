@@ -727,6 +727,12 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
   (s/split s #"\n"))
 
 
+(defn split-on-whitespace
+  ""
+  [s]
+  (s/split s #"\s"))
+
+
 (defn remove-first
   "removes first occurrence of an item from a seq"
   [x xs]
@@ -753,12 +759,51 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
 ;; while verifying all items are distinct.
 ;; when a duplicate is found, stop. 
 
+;; taken from http://grokbase.com/t/gg/clojure/15596dgqrc/opinion-on-take-while-for-stateful-transducers
+(defn take-while-accumulating [accf init pred2]
+    (fn [rf]
+      (let [vstate (volatile! init)]
+        (fn
+          ([] (rf))
+          ([result] (rf result))
+          ([result input]
+           (if (pred2 @vstate input)
+             (do (vswap! vstate accf input)
+                 (rf result input))
+             (reduced result)))))))
+
+(defn take-while-not-contains
+  [a]
+  (into [] (take-while-accumulating conj #{} (complement contains?)) a))
+
+;; (take-while-not-contains (concat '(1 2 3) '(4 5 6)))
+
+;; generate all permutations of all words found in string
+;; (mapcat #(permutations (string-to-chars %)) (split-on-whitespace "mldgn jxovw yuawcvz kzgzwht rxqhzev fsdnvu vluuo eycoh cugf qjugo"))
+
+;; (take-while-not-contains (mapcat #(permutations (string-to-chars %)) (split-on-whitespace "abc 123 ab")))
+
+;; (count (mapcat #(permutations (string-to-chars %)) (split-on-whitespace "ab cd")))
+;; 4
+;; (count (take-while-not-contains (mapcat #(permutations (string-to-chars %)) (split-on-whitespace "ab cd"))))
+;; 4
+
+(defn same-length
+  [s]
+  (=
+   (count
+    (mapcat #(permutations (string-to-chars %)) (split-on-whitespace s)))
+   (count
+    (take-while-not-contains
+        (mapcat #(permutations (string-to-chars %)) (split-on-whitespace s))))))
+
 (defn intersection-between-permutations
   ""
   [s t]
   (sets/intersection
    (set (permutations (string-to-chars s)))
    (set (permutations (string-to-chars t)))))
+
 
 (defn passphrase-valid-anagrams?
   []
