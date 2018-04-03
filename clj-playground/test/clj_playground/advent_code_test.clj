@@ -776,7 +776,6 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
   [a]
   (into [] (take-while-accumulating conj #{} (complement contains?)) a))
 
-;; (take-while-not-contains (concat '(1 2 3) '(4 5 6)))
 
 ;; generate all permutations of all words found in string
 ;; (mapcat #(permutations (string-to-chars %)) (split-on-whitespace "mldgn jxovw yuawcvz kzgzwht rxqhzev fsdnvu vluuo eycoh cugf qjugo"))
@@ -804,10 +803,19 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
    (set (permutations (string-to-chars s)))
    (set (permutations (string-to-chars t)))))
 
-
 (defn passphrase-valid-anagrams?
-  []
-  )
+  ""
+  [s]
+  (=
+   (count
+    (mapcat #(permutations (string-to-chars %)) (split-on-whitespace s)))
+   (count
+    (take-while-not-contains
+        (mapcat #(permutations (string-to-chars %)) (split-on-whitespace s))))))
+
+(defn filter-valid-passphrases
+  [str]
+  (filter passphrase-valid-anagrams? (split-on-newlines str)))
 
 (deftest day-4-test
   (testing
@@ -817,9 +825,26 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
       (is (=      (count (split-on-newlines "a\nb\nc\nd")) 4))
       (is (=      (count (split-on-newlines input)) 512))
       (is (=      (count (filter passphrase-valid? (split-on-newlines input))) 337)))
+
   ;; part 2
   (testing
-      (is (= true true)))
+      (is (= (string-to-chars "abc") '("a" "b" "c")))
+      (is (= (take-while-not-contains '(1 2 3 2)) [1 2 3]))
+      (is (= (permutations (string-to-chars "ab")) '(("a" "b") ("b" "a"))))
+      (is (= (permutations (string-to-chars "iiii oiii ooii oooi oooo")) '())))
+  
+  (testing
+    (is (= (passphrase-valid-anagrams? "abc def") true))
+    (is (= (passphrase-valid-anagrams? "ab ba") false))
+    (is (= (passphrase-valid-anagrams? "abcde fghij") true))
+    (is (= (passphrase-valid-anagrams? "abcde xyz ecdab") false))
+    (is (= (passphrase-valid-anagrams? "a ab abc abd abf abj") true))
+    (is (= (passphrase-valid-anagrams? "iiii oiii ooii oooi oooo") true))
+    (is (= (passphrase-valid-anagrams? "oiii ioii iioi iiio") false))
+    )
 
-  )
+;;  (testing
+;;      (is (= (count (filter-valid-passphrases input)) 17)))
+
+    )
 
