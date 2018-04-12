@@ -726,12 +726,10 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
   [s]
   (s/split s #"\n"))
 
-
 (defn split-on-whitespace
   ""
   [s]
   (s/split s #"\s"))
-
 
 (defn remove-first
   "removes first occurrence of an item from a seq"
@@ -803,15 +801,22 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
    (set (permutations (string-to-chars s)))
    (set (permutations (string-to-chars t)))))
 
+(defn word-permutations
+  ""
+  [s]
+  (mapcat #(permutations (string-to-chars %)) (split-on-whitespace s)))
+
+(defn while-not-contains
+  "TODO problem is here"
+  [s]
+  (take-while-not-contains (mapcat #(permutations (string-to-chars %)) (split-on-whitespace s))))
+
 (defn passphrase-valid-anagrams?
   ""
   [s]
   (=
-   (count
-    (mapcat #(permutations (string-to-chars %)) (split-on-whitespace s)))
-   (count
-    (take-while-not-contains
-        (mapcat #(permutations (string-to-chars %)) (split-on-whitespace s))))))
+   (count (word-permutations s))
+   (count (while-not-contains s)))) 
 
 (defn filter-valid-passphrases
   [str]
@@ -830,9 +835,14 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
   (testing
       (is (= (string-to-chars "abc") '("a" "b" "c")))
       (is (= (take-while-not-contains '(1 2 3 2)) [1 2 3]))
-      (is (= (permutations (string-to-chars "ab")) '(("a" "b") ("b" "a"))))
-      (is (= (permutations (string-to-chars "iiii oiii ooii oooi oooo")) '())))
+      (is (= (permutations (string-to-chars "ab")) '(("a" "b") ("b" "a")))))
   
+  (testing
+      (is (= (count (word-permutations "ab cd")) 4))
+      (is (= (word-permutations "aa aa") '(("a" "a") ("a" "a") ("a" "a") ("a" "a"))))
+      (is (= (while-not-contains "iiii oiii ooii oooi oooo")
+             (while-not-contains ""))))
+
   (testing
     (is (= (passphrase-valid-anagrams? "abc def") true))
     (is (= (passphrase-valid-anagrams? "ab ba") false))
@@ -847,4 +857,16 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
 ;;      (is (= (count (filter-valid-passphrases input)) 17)))
 
     )
+
+
+
+
+
+
+
+
+
+
+
+
 
