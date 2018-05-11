@@ -737,6 +737,8 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
   (let [[n m] (split-with (partial not= x) xs)]
     (concat n (rest m))))
 
+  (def s "abc")
+
 (defn permutations
   "permutations of a sequence.
   in case of duplicate items in sequence,
@@ -746,6 +748,8 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
    (if (seq (rest s))
      (apply concat (for [x s] (map #(cons x %) (permutations (remove-first x s)))))
      [s])))
+
+(rest (permutations s))
 
 (defn string-to-chars
   ""
@@ -806,10 +810,23 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
   [s]
   (mapcat #(permutations (string-to-chars %)) (split-on-whitespace s)))
 
+(rest (word-permutations "ab cd"))
+
+  (def xs '("ab" "cd"))
+
+(defn first-seq-then-word-permutations
+  ""
+  [xs]
+  (apply concat (map string-to-chars xs) (map #(rest (word-permutations %)) xs)))
+
+;; previus code is correct
+
 (defn while-not-contains
   "TODO problem is here"
   [s]
   (take-while-not-contains (mapcat #(permutations (string-to-chars %)) (split-on-whitespace s))))
+
+(def s "iiii oiii")
 
 (defn passphrase-valid-anagrams?
   ""
@@ -839,9 +856,7 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
   
   (testing
       (is (= (count (word-permutations "ab cd")) 4))
-      (is (= (word-permutations "aa aa") '(("a" "a") ("a" "a") ("a" "a") ("a" "a"))))
-      (is (= (while-not-contains "iiii oiii ooii oooi oooo")
-             (while-not-contains ""))))
+      (is (= (word-permutations "aa aa") '(("a" "a") ("a" "a") ("a" "a") ("a" "a")))))
 
   (testing
     (is (= (passphrase-valid-anagrams? "abc def") true))
@@ -849,6 +864,7 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
     (is (= (passphrase-valid-anagrams? "abcde fghij") true))
     (is (= (passphrase-valid-anagrams? "abcde xyz ecdab") false))
     (is (= (passphrase-valid-anagrams? "a ab abc abd abf abj") true))
+    (is (= (passphrase-valid-anagrams? "iiii oiii") true))
     (is (= (passphrase-valid-anagrams? "iiii oiii ooii oooi oooo") true))
     (is (= (passphrase-valid-anagrams? "oiii ioii iioi iiio") false))
     )
@@ -857,16 +873,6 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
 ;;      (is (= (count (filter-valid-passphrases input)) 17)))
 
     )
-
-
-
-
-
-
-
-
-
-
 
 
 
