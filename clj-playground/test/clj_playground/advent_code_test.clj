@@ -737,8 +737,6 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
   (let [[n m] (split-with (partial not= x) xs)]
     (concat n (rest m))))
 
-  (def s "abc")
-
 (defn permutations
   "permutations of a sequence.
   in case of duplicate items in sequence,
@@ -748,8 +746,6 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
    (if (seq (rest s))
      (apply concat (for [x s] (map #(cons x %) (permutations (remove-first x s)))))
      [s])))
-
-(rest (permutations s))
 
 (defn string-to-chars
   ""
@@ -777,7 +773,6 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
 (defn take-while-not-contains
   [a]
   (into [] (take-while-accumulating conj #{} (complement contains?)) a))
-
 
 ;; generate all permutations of all words found in string
 ;; (mapcat #(permutations (string-to-chars %)) (split-on-whitespace "mldgn jxovw yuawcvz kzgzwht rxqhzev fsdnvu vluuo eycoh cugf qjugo"))
@@ -810,10 +805,6 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
   [s]
   (mapcat #(permutations (string-to-chars %)) (split-on-whitespace s)))
 
-(rest (word-permutations "ab cd"))
-
-  (def xs '("ab" "cd"))
-
 (defn first-seq-then-word-permutations
   ""
   [xs]
@@ -822,18 +813,24 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
 ;; previus code is correct
 
 (defn while-not-contains
-  "TODO problem is here"
+  ""
   [s]
-  (take-while-not-contains (mapcat #(permutations (string-to-chars %)) (split-on-whitespace s))))
+  (take-while-not-contains (first-seq-then-word-permutations (split-on-whitespace s))))
 
-(def s "iiii oiii")
+;; better algorithm
+
+(defn set-of-sorted-strings
+  "splits on whitespace the input
+  sorts each resulting element and makes a set"
+  [s]
+  (set (map sort (split-on-whitespace s))))
 
 (defn passphrase-valid-anagrams?
   ""
   [s]
   (=
-   (count (word-permutations s))
-   (count (while-not-contains s)))) 
+   (count (split-on-whitespace s))
+   (count (set-of-sorted-strings s)))) 
 
 (defn filter-valid-passphrases
   [str]
@@ -869,10 +866,8 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
     (is (= (passphrase-valid-anagrams? "oiii ioii iioi iiio") false))
     )
 
-;;  (testing
-;;      (is (= (count (filter-valid-passphrases input)) 17)))
-
-    )
+  (testing
+      (is (= (count (filter-valid-passphrases input)) 231))))
 
 
 
