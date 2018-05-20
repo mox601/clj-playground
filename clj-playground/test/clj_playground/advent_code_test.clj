@@ -869,5 +869,9 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
   (testing
       (is (= (count (filter-valid-passphrases input)) 231))))
 
+(deftest day-5-test
 
+   (testing
+      (is (= 1 1)))
 
+  )
