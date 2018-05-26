@@ -869,6 +869,19 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
   (testing
       (is (= (count (filter-valid-passphrases input)) 231))))
 
+
+(defn map-nth
+  [xs ys n]
+  (map #(nth % n) [xs ys]))
+;; (map-nth [0 1 2] [3 4 5] 2)
+
+(defn update-increment
+  [xs idx increment]
+  (update xs idx #(+ increment %)))
+
+;; (update-increment [0 1 2] 1 -10)
+
+
 (deftest day-5-test
 
    (testing
