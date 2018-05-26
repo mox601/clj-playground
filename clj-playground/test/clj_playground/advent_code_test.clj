@@ -869,18 +869,38 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
   (testing
       (is (= (count (filter-valid-passphrases input)) 231))))
 
+(comment
+idea: maintain a second vector of same size
+to keep track of the increments when visiting the
+offsets (first vector)
+offsets:    [1 -1 -3 5] ;; the input
+increments: [0  0  1 0]
+
+while an out-of-bounds exception does not occur
+do:
+  read offsets[idx]
+  make index = offsets[idx] + increments[idx]
+  increment increments[idx] by one
+)
 
 (defn map-nth
   [xs ys n]
   (map #(nth % n) [xs ys]))
 ;; (map-nth [0 1 2] [3 4 5] 2)
 
-(defn update-increment
-  [xs idx increment]
-  (update xs idx #(+ increment %)))
+;; to get the offset to use, sum offset with increments
+;; (reduce + *1)
 
-;; (update-increment [0 1 2] 1 -10)
+(defn inc-at-idx
+  [xs idx]
+  (update xs idx inc))
 
+;; (inc-at-idx [0 1 2] 1)
+
+(defn repeat-zeros
+  [n]
+  (vec (repeat n 0)))
+;; (repeat-zeros 1)
 
 (deftest day-5-test
 
