@@ -907,7 +907,7 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
 
 (defn repeat-zeros
   [n]
-  (repeat n 0))
+  (vec (repeat n 0)))
 ;; (repeat-zeros 1)
 
 (defn loop-it
@@ -916,13 +916,13 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
          zeros (repeat-zeros (count xs))
          idx 0]
     (when (>= (count xs) idx)
-      ;;(println (nth xs idx))
+      (println xs " " zeros " " idx)
       ;; if oob, return reduce + zeros
       (if (= (count xs) idx)
         (println
-         (str "oob " idx " " (reduce + zeros))))
+         (reduce + zeros)))
       (recur xs
-             zeros
+             (inc-at-idx zeros idx)
              (inc idx)))))
 
 (deftest day-5-test
