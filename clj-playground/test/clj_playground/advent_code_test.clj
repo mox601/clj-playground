@@ -869,26 +869,34 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
   (testing
       (is (= (count (filter-valid-passphrases input)) 231))))
 
-(comment
-idea: maintain a second vector of same size
-to keep track of the increments when visiting the
-offsets (first vector)
-offsets:    [1 -1 -3 5] ;; the input
-increments: [0  0  1 0]
+;; idea: maintain a second vector of same size
+;; to keep track of the increments when visiting the
+;; offsets (first vector)
+;; offsets:    [1 -1 -3 5] ;; the input
+;; increments: [0  0  1 0]
+;; steps needed to exit are the sum of all increments
 
-while an out-of-bounds exception does not occur
-do:
-  read offsets[idx]
-  make index = offsets[idx] + increments[idx]
-  increment increments[idx] by one
-)
+;; TODO how to read the vector using offsets?
+;; sum the offsets?
+(defn offset-to-index
+ [offset prev-idx]
+ ""
+ (+ offset prev-idx))
+
+;; while an out-of-bounds exception does not occur
+;; do:
+;;   read offsets[idx]
+;;   make index = offsets[idx] + increments[idx]
+;;   increment increments[idx] by one
+
+;; state is: current index
 
 (defn map-nth
   [xs ys n]
   (map #(nth % n) [xs ys]))
 ;; (map-nth [0 1 2] [3 4 5] 2)
 
-;; to get the offset to use, sum offset with increments
+;; To get the next offset to use, sum offset with increments
 ;; (reduce + *1)
 
 (defn inc-at-idx
@@ -899,8 +907,23 @@ do:
 
 (defn repeat-zeros
   [n]
-  (vec (repeat n 0)))
+  (repeat n 0))
 ;; (repeat-zeros 1)
+
+(defn loop-it
+  []
+  (loop [xs (range 10),
+         zeros (repeat-zeros (count xs))
+         idx 0]
+    (when (>= (count xs) idx)
+      ;;(println (nth xs idx))
+      ;; if oob, return reduce + zeros
+      (if (= (count xs) idx)
+        (println
+         (str "oob " idx " " (reduce + zeros))))
+      (recur xs
+             zeros
+             (inc idx)))))
 
 (deftest day-5-test
 
