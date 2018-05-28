@@ -1,7 +1,8 @@
 (ns clj-playground.advent-code-test
   (:require [clojure.test :refer :all])
   (:require [clojure.string :as s])
-  (:require [clojure.set :as sets]))
+  (:require [clojure.set :as sets])
+  (:require [clojure.java.io :as io]))
 
 (defn string-to-int-seq
   "converts a string to a sequence of integers"
@@ -869,27 +870,15 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
   (testing
       (is (= (count (filter-valid-passphrases input)) 231))))
 
-;; idea: maintain a second vector of same size
-;; to keep track of the increments when visiting the
-;; offsets (first vector)
-;; offsets:    [1 -1 -3 5] ;; the input
-;; increments: [0  0  1 0]
-;; steps needed to exit are the sum of all increments
+(def day-5-input (io/resource "resources/day-5-input.txt"))
+(def day-5-input-seq (seq (split-on-newlines (slurp day-5-input))))
 
-;; TODO how to read the vector using offsets?
-;; sum the offsets?
+(println day-5-input-seq)
+
 (defn offset-to-index
  [offset prev-idx]
  ""
  (+ offset prev-idx))
-
-;; while an out-of-bounds exception does not occur
-;; do:
-;;   read offsets[idx]
-;;   make index = offsets[idx] + increments[idx]
-;;   increment increments[idx] by one
-
-;; state is: current index
 
 (defn map-nth
   [xs ys n]
@@ -902,7 +891,6 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
 (defn inc-at-idx
   [xs idx]
   (update xs idx inc))
-
 ;; (inc-at-idx [0 1 2] 1)
 
 (defn repeat-zeros
@@ -910,24 +898,42 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
   (vec (repeat n 0)))
 ;; (repeat-zeros 1)
 
-(defn loop-it
-  []
-  (loop [xs (range 10),
+;; idea: maintain a second vector of same size
+;; to keep track of the increments when visiting the
+;; offsets (first vector)
+;; offsets:    [1 -1 -3 5] ;; the input
+;; increments: [0  0  1 0]
+;; steps needed to exit are the sum of all increments
+
+;; TODO how to read the vector using offsets?
+;; sum the offsets?
+
+;; while an out-of-bounds exception does not occur
+;; do:
+;;   read offsets[idx]
+;;   make index = offsets[idx] + increments[idx]
+;;   increment increments[idx] by one
+
+;; state is: current index
+(defn count-steps-to-exit
+  [ints]
+  (loop [xs ints
          zeros (repeat-zeros (count xs))
          idx 0]
     (when (>= (count xs) idx)
-      (println zeros " " idx)
       ;; if oob (< 0 or >= count), return reduce + zeros
-      (if (= (count xs) idx)
-        (println
-         (reduce + zeros))
+      (if (or (< idx 0)
+              (>= idx (count xs)))
+        (reduce + zeros)
         (recur xs
                (inc-at-idx zeros idx)
-               (inc idx))))))
+               (+ idx
+                  (nth xs idx)
+                  (nth zeros idx)))))))
 
 (deftest day-5-test
 
    (testing
+      (is (= 1 1))
       (is (= 1 1)))
-
-  )
+)
