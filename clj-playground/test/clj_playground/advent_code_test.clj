@@ -917,7 +917,7 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
          idx 0]
     (when (>= (count xs) idx)
       (println zeros " " idx)
-      ;; if oob, return reduce + zeros
+      ;; if oob (< 0 or >= count), return reduce + zeros
       (if (= (count xs) idx)
         (println
          (reduce + zeros))
