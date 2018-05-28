@@ -916,14 +916,14 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
          zeros (repeat-zeros (count xs))
          idx 0]
     (when (>= (count xs) idx)
-      (println xs " " zeros " " idx)
+      (println zeros " " idx)
       ;; if oob, return reduce + zeros
       (if (= (count xs) idx)
         (println
-         (reduce + zeros)))
-      (recur xs
-             (inc-at-idx zeros idx)
-             (inc idx)))))
+         (reduce + zeros))
+        (recur xs
+               (inc-at-idx zeros idx)
+               (inc idx))))))
 
 (deftest day-5-test
 
