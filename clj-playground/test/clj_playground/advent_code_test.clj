@@ -874,7 +874,7 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
 (def day-5-input-seq 
   (map #(Integer/parseInt %) (apply list (s/split-lines (slurp day-5-input)))))
 
-(println day-5-input-seq)
+;; (println day-5-input-seq)
 
 (defn offset-to-index
  [offset prev-idx]
@@ -893,6 +893,21 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
   [xs idx]
   (update xs idx inc))
 ;; (inc-at-idx [0 1 2] 1)
+
+(defn strange-inc-at-idx
+  [xs idx offset]
+  ;; if the offset was three or more, instead decrease it by 1. 
+  ;; Otherwise, increase it by 1 as before.
+  (if (>= offset 3)
+    (do
+      (println "gt3 " offset)
+      (update xs idx dec)
+      )
+    (do 
+      ;;(println "lt3" offset)
+      (update xs idx inc)
+      )
+    ))
 
 (defn repeat-zeros
   [n]
@@ -923,7 +938,6 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
          idx 0]
     (when (>= (count xs) idx)
       ;; if oob (< 0 or >= count), return reduce + zeros
-      (println idx)
       (if (or (< idx 0)
               (>= idx (count xs)))
         (reduce + zeros)
@@ -933,9 +947,29 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
                   (nth xs idx)
                   (nth zeros idx)))))))
 
+;; TODO refactor to take function
+(defn count-steps-to-exit-stranger
+  [ints]
+  (loop [xs ints
+         zeros (repeat-zeros (count xs))
+         idx 0]
+    (when (>= (count xs) idx)
+      ;; if oob (< 0 or >= count), return reduce + zeros
+      ;;(println idx)
+      (if (or (< idx 0)
+              (>= idx (count xs)))
+        (reduce + zeros)
+        (recur xs
+               (strange-inc-at-idx zeros idx (nth xs idx))
+               (+ idx
+                  (nth xs idx)
+                  (nth zeros idx)))))))
+
 (deftest day-5-test
 
    (testing
       (is (= 1 1))
-      (is (= (count-steps-to-exit day-5-input-seq) 1)))
+      ;; (is (= (count-steps-to-exit day-5-input-seq) 354121))
+      (is (= (count-steps-to-exit-stranger day-5-input-seq) 354121)))
+   ;; TODO stranger jumps
 )
