@@ -871,7 +871,8 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
       (is (= (count (filter-valid-passphrases input)) 231))))
 
 (def day-5-input (io/resource "resources/day-5-input.txt"))
-(def day-5-input-seq (seq (split-on-newlines (slurp day-5-input))))
+(def day-5-input-seq 
+  (map #(Integer/parseInt %) (apply list (s/split-lines (slurp day-5-input)))))
 
 (println day-5-input-seq)
 
@@ -922,6 +923,7 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
          idx 0]
     (when (>= (count xs) idx)
       ;; if oob (< 0 or >= count), return reduce + zeros
+      (println idx)
       (if (or (< idx 0)
               (>= idx (count xs)))
         (reduce + zeros)
@@ -935,5 +937,5 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
 
    (testing
       (is (= 1 1))
-      (is (= 1 1)))
+      (is (= (count-steps-to-exit day-5-input-seq) 1)))
 )
