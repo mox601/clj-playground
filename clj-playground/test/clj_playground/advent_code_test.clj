@@ -900,11 +900,11 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
   ;; Otherwise, increase it by 1 as before.
   (if (>= offset 3)
     (do
-      (println "gt3 " offset)
+      (println "idx " idx " gt3 " offset)
       (update xs idx dec)
       )
     (do 
-      ;;(println "lt3" offset)
+      (println "idx " idx " lt3 " offset)
       (update xs idx inc)
       )
     ))
@@ -970,6 +970,10 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
    (testing
       (is (= 1 1))
       ;; (is (= (count-steps-to-exit day-5-input-seq) 354121))
-      (is (= (count-steps-to-exit-stranger day-5-input-seq) 354121)))
+
+;;0) 3  0  1  -3
+      (is (= (count-steps-to-exit-stranger '(0 3 0 1 -3)) 1))
+      ;; (is (= (count-steps-to-exit-stranger day-5-input-seq) 354121))
+      )
    ;; TODO stranger jumps
 )
