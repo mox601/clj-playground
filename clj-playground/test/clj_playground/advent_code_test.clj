@@ -895,19 +895,8 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
 ;; (inc-at-idx [0 1 2] 1)
 
 (defn strange-inc-at-idx
-  [xs idx offset]
-  ;; if the offset was three or more, instead decrease it by 1. 
-  ;; Otherwise, increase it by 1 as before.
-  (if (>= offset 3)
-    (do
-      (println "idx " idx " gt3 " offset)
-      (update xs idx dec)
-      )
-    (do 
-      (println "idx " idx " lt3 " offset)
-      (update xs idx inc)
-      )
-    ))
+  [xs idx increment]
+    (update xs idx #(+ increment %)))
 
 (defn repeat-zeros
   [n]
@@ -934,36 +923,36 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
 (defn count-steps-to-exit
   [ints]
   (loop [xs ints
-         zeros (repeat-zeros (count xs))
+         increments (repeat-zeros (count xs))
          idx 0]
     (when (>= (count xs) idx)
-      ;; if oob (< 0 or >= count), return reduce + zeros
+      ;; if oob (< 0 or >= count), return reduce + increments
       (if (or (< idx 0)
               (>= idx (count xs)))
-        (reduce + zeros)
+        (reduce + increments)
         (recur xs
-               (inc-at-idx zeros idx)
+               (inc-at-idx increments idx)
                (+ idx
                   (nth xs idx)
-                  (nth zeros idx)))))))
+                  (nth increments idx)))))))
 
-;; TODO refactor to take function
+;; TODO
 (defn count-steps-to-exit-stranger
   [ints]
   (loop [xs ints
-         zeros (repeat-zeros (count xs))
+         increments (repeat-zeros (count xs))
          idx 0]
     (when (>= (count xs) idx)
-      ;; if oob (< 0 or >= count), return reduce + zeros
-      ;;(println idx)
+      ;; if oob (< 0 or >= count), return reduce + increments
+      (println "xs " xs " increments " increments " idx " idx)      
       (if (or (< idx 0)
               (>= idx (count xs)))
-        (reduce + zeros)
+        (reduce + increments)
         (recur xs
-               (strange-inc-at-idx zeros idx (nth xs idx))
+               (strange-inc-at-idx increments idx 1)
                (+ idx
                   (nth xs idx)
-                  (nth zeros idx)))))))
+                  (nth increments idx)))))))
 
 (deftest day-5-test
 
@@ -972,7 +961,7 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
       ;; (is (= (count-steps-to-exit day-5-input-seq) 354121))
 
 ;;0) 3  0  1  -3
-      (is (= (count-steps-to-exit-stranger '(0 3 0 1 -3)) 1))
+      (is (= (count-steps-to-exit-stranger '(0 3 0 1 -3)) 10))
       ;; (is (= (count-steps-to-exit-stranger day-5-input-seq) 354121))
       )
    ;; TODO stranger jumps
