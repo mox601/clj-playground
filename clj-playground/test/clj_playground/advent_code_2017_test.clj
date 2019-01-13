@@ -1,4 +1,4 @@
-(ns clj-playground.advent-code-test
+(ns clj-playground.advent-code-2017-test
   (:require [clojure.test :refer :all])
   (:require [clojure.string :as s])
   (:require [clojure.set :as sets])
@@ -870,16 +870,16 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
   (testing
       (is (= (count (filter-valid-passphrases input)) 231))))
 
-(def day-5-input (io/resource "resources/day-5-input.txt"))
+(def day-5-input (io/resource "resources/advent2017/day-5-input.txt"))
 (def day-5-input-seq 
   (map #(Integer/parseInt %) (apply list (s/split-lines (slurp day-5-input)))))
 
 ;; (println day-5-input-seq)
 
-(defn offset-to-index
- [offset prev-idx]
- ""
- (+ offset prev-idx))
+;;(defn offset-to-index
+;; [offset prev-idx]
+;; ""
+;; (+ offset prev-idx))
 
 (defn map-nth
   [xs ys n]
@@ -893,10 +893,6 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
   [xs idx]
   (update xs idx inc))
 ;; (inc-at-idx [0 1 2] 1)
-
-(defn strange-inc-at-idx
-  [xs idx increment]
-    (update xs idx #(+ increment %)))
 
 (defn repeat-zeros
   [n]
@@ -937,6 +933,7 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
                   (nth increments idx)))))))
 
 ;; TODO
+;; same as previous, but it only changes the function to increment at idx
 (defn count-steps-to-exit-stranger
   [ints]
   (loop [xs ints
@@ -944,24 +941,55 @@ rvbu czwpdit vmlihg spz lfaxxev zslfuto oog dvoksub")
          idx 0]
     (when (>= (count xs) idx)
       ;; if oob (< 0 or >= count), return reduce + increments
-      (println "xs " xs " increments " increments " idx " idx)      
       (if (or (< idx 0)
               (>= idx (count xs)))
         (reduce + increments)
         (recur xs
-               (strange-inc-at-idx increments idx 1)
+               (inc-at-idx increments idx)
                (+ idx
                   (nth xs idx)
                   (nth increments idx)))))))
+
+;; old, bugged implementation
+
+(defn count-steps-to-exit-stranger-old
+  [ints]
+  (loop [xs ints
+         increments (repeat-zeros (count xs))
+         idx 0]
+    (when (>= (count xs) idx)
+      ;; if oob (< 0 or >= count), return reduce + increments
+      (println "xs " xs)
+      (println "increments " increments )
+      (println "idx " idx)
+      (if (or (< idx 0)
+              (>= idx (count xs)))
+        (reduce + increments)
+        (let [nth-incr (nth increments idx)
+              jmp (+ (nth xs idx) nth-incr)
+              incr (if (< 2 (nth xs idx)) -1 1)]
+          (println "jmp " jmp)
+          (println "incr " incr)
+          ;; (println "nth-incr " nth-incr " jmp " jmp " incr-at-idx " incr)
+          (recur xs
+                 (update increments idx #(+ incr %))
+                 ;; TODO review sum
+                 (+ idx
+                    jmp
+                    nth-incr)
+                 )
+          )))))
 
 (deftest day-5-test
 
    (testing
       (is (= 1 1))
       ;; (is (= (count-steps-to-exit day-5-input-seq) 354121))
+      ;; TODO fixme
+      ; (is (= (count-steps-to-exit-stranger '(0 3)) 10))
 
 ;;0) 3  0  1  -3
-      (is (= (count-steps-to-exit-stranger '(0 3 0 1 -3)) 10))
+      ;; (is (= (count-steps-to-exit-stranger '(0 3 0 1 -3)) 10))
       ;; (is (= (count-steps-to-exit-stranger day-5-input-seq) 354121))
       )
    ;; TODO stranger jumps
