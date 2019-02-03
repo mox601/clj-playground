@@ -47,15 +47,10 @@
 (def day-2-input-seq
   (split-lines-as-str-seq day-2-input))
 
-(def m {\a 1 \b 2 \c 5})
-(def xs '(\a \b \b \a \c))
-
 ;; values as set
 (defn deduplicated-freqs
  [xs]
  (set (vals (frequencies xs))))
-
-(deduplicated-freqs "abcc")
 
 ;; count values = 2, = 3
   
@@ -70,8 +65,6 @@
         (fn [x] (= 2 x))
         (fn [x] (= 3 x)))
        fset))
-
-(list-of-couples #{1 2 3})
 
 (defn or-between-sides
   [boolean-couples]
@@ -112,15 +105,10 @@
   (defn vec-sum
     [pairs]
     (reduce #(mapv + %1 %2) pairs))
-  
-(vec-sum [[0 0] [1 0] [1 0] [1 0]])
+ 
 
 ;; works
 (vec-sum (map-to-vals list-of-maps))
-
-(vec-sum (map-to-vals (map counts-2-3 ["abbcde" "aabbb"])))
-
-(reduce * 1 [2 3])
 
 ;;checksum function
 (defn checksum
