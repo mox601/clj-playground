@@ -47,10 +47,6 @@
 (def day-2-input-seq
   (split-lines-as-str-seq day-2-input))
 
-(defn char-freqs
-  [s]
-  (frequencies (seq s)))
-
 (def m {\a 1 \b 2 \c 5})
 (def xs '(\a \b \b \a \c))
 
@@ -58,6 +54,8 @@
 (defn deduplicated-freqs
  [xs]
  (set (vals (frequencies xs))))
+
+(deduplicated-freqs "abcc")
 
 ;; count values = 2, = 3
   
@@ -73,7 +71,6 @@
         (fn [x] (= 3 x)))
        fset))
 
-;;ok
 (list-of-couples #{1 2 3})
 
 (defn or-between-sides
@@ -85,15 +82,85 @@
    {:first false :second false}
    boolean-couples))
 
-;; it works
-
 (def boolean-couples
   [[false false] [true false] [false false]])
 
-(or-between-sides boolean-couples)
+;; (deduplicated-freqs "abcc")
+(defn counts-2-3
+  [str]
+  (or-between-sides
+   (list-of-couples
+    (deduplicated-freqs str))))
 
+(defn map-fn-on-map-vals [f m]
+  (reduce (fn [altered-map [k v]]
+            (assoc altered-map k (f v)))
+          {}
+          m))
+
+;; simpler, doesnt preserve structure
+
+(map #(if % 1 0) (vals {:a true :b false}))
+
+(def list-of-maps [{:a true :b false} {:a true :b true}])
+
+(defn map-to-vals
+  [ms]
+  (map (fn [m] (map #(if % 1 0) (vals m)))
+       ms))
+
+  (defn vec-sum
+    [pairs]
+    (reduce #(mapv + %1 %2) pairs))
+  
+(vec-sum [[0 0] [1 0] [1 0] [1 0]])
+
+;; works
+(vec-sum (map-to-vals list-of-maps))
+
+(vec-sum (map-to-vals (map counts-2-3 ["abbcde" "aabbb"])))
+
+(reduce * 1 [2 3])
+
+;;checksum function
+(defn checksum
+  [strings]
+  (reduce * 1 (vec-sum (map-to-vals (map counts-2-3 strings)))))
+
+(checksum ["abb" "aa" "aabbb" "accc"])
+;;works
+
+(defn bool->int [b] (if b 1 0))
+
+;; values to 0-1
+(def maps [{:a false :b true} {:a false :b false}])
+
+(defn values-to-zero-one
+  [maps]
+  (map #(map-fn-on-map-vals bool->int %)
+       maps))
+
+  ;; it works
 (deftest day-2-test
   (testing "day-2-tests"
     (is (= (count day-2-input-seq) 250))
-    (is (= (or-between-sides boolean-couples) {:first true :second false}))))
+    (is (= (or-between-sides boolean-couples) {:first true :second false}))
+    (is (= (counts-2-3 "abcdef") {:first false, :second false}))
+    (is (= (counts-2-3 "bababc") {:first true,  :second true}))
+    (is (= (counts-2-3 "abbcde") {:first true,  :second false}))
+    (is (= (counts-2-3 "abcccd") {:first false, :second true}))
+    (is (= (counts-2-3 "aabcdd") {:first true,  :second false}))
+    (is (= (counts-2-3 "abcdee") {:first true,  :second false}))
+    (is (= (counts-2-3 "ababab") {:first false, :second true}))
+    ;;checksum
+    (is (= (checksum ["abcdef"
+                      "bababc"
+                      "abbcde"
+                      "abcccd"
+                      "aabcdd"
+                      "abcdee"
+                      "ababab"]) 12))
+    (is (= (checksum day-2-input-seq) 6474))
+        ))
+
 
