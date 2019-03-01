@@ -47,24 +47,8 @@
 (def day-2-input-seq
   (split-lines-as-str-seq day-2-input))
 
-;; values as set
-(defn deduplicated-freqs
- [xs]
- (set (vals (frequencies xs))))
-
 ;; count values = 2, = 3
-  
 ;; juxt applies both fns at once
-;; just on set
-(map (juxt (fn [x] (= 2 x)) (fn [x] (= 3 x))) #{1 2})
-
-;; named fn
-(defn list-of-couples
-  [fset]
-  (map (juxt
-        (fn [x] (= 2 x))
-        (fn [x] (= 3 x)))
-       fset))
 
 (defn or-between-sides
   [boolean-couples]
@@ -75,15 +59,29 @@
    {:first false :second false}
    boolean-couples))
 
-(def boolean-couples
-  [[false false] [true false] [false false]])
-
-;; (deduplicated-freqs "abcc")
 (defn counts-2-3
   [str]
   (or-between-sides
-   (list-of-couples
-    (deduplicated-freqs str))))
+   (map (juxt
+        (fn [x] (= 2 x))
+        (fn [x] (= 3 x)))
+       (set (vals (frequencies str))))))
+
+;; simpler, doesnt preserve structure
+;; (map #(if % 1 0) (vals {:a true :b false}))
+(defn vec-sum
+  [pairs]
+  (reduce #(mapv + %1 %2) pairs))
+ 
+(defn bool->int [b] (if b 1 0))
+
+;;checksum function
+(defn checksum
+  [strings]
+  (reduce * 1
+          (vec-sum
+           (map #(map bool->int (vals %))
+                (map counts-2-3 strings)))))
 
 (defn map-fn-on-map-vals [f m]
   (reduce (fn [altered-map [k v]]
@@ -91,48 +89,25 @@
           {}
           m))
 
-;; simpler, doesnt preserve structure
-
-(map #(if % 1 0) (vals {:a true :b false}))
-
-(def list-of-maps [{:a true :b false} {:a true :b true}])
-
-(defn map-to-vals
-  [ms]
-  (map (fn [m] (map #(if % 1 0) (vals m)))
-       ms))
-
-  (defn vec-sum
-    [pairs]
-    (reduce #(mapv + %1 %2) pairs))
- 
-
-;; works
-(vec-sum (map-to-vals list-of-maps))
-
-;;checksum function
-(defn checksum
-  [strings]
-  (reduce * 1 (vec-sum (map-to-vals (map counts-2-3 strings)))))
-
-(checksum ["abb" "aa" "aabbb" "accc"])
-;;works
-
-(defn bool->int [b] (if b 1 0))
-
 ;; values to 0-1
-(def maps [{:a false :b true} {:a false :b false}])
-
 (defn values-to-zero-one
   [maps]
-  (map #(map-fn-on-map-vals bool->int %)
-       maps))
+  (map #(map-fn-on-map-vals bool->int %) maps))
 
-  ;; it works
+(defn different-at-idx
+  [st1 st2]
+  (keep-indexed (fn
+                 [idx itm]
+                 ;; idx if different, nil if same
+                 (if (not= (itm 0) (itm 1)) idx))                          
+               (map vector
+                    (seq (char-array st1))
+                    (seq (char-array st2)))))
+;; it works until here
+
 (deftest day-2-test
-  (testing "day-2-tests"
+  (testing "day-2-tests-1"
     (is (= (count day-2-input-seq) 250))
-    (is (= (or-between-sides boolean-couples) {:first true :second false}))
     (is (= (counts-2-3 "abcdef") {:first false, :second false}))
     (is (= (counts-2-3 "bababc") {:first true,  :second true}))
     (is (= (counts-2-3 "abbcde") {:first true,  :second false}))
@@ -140,7 +115,7 @@
     (is (= (counts-2-3 "aabcdd") {:first true,  :second false}))
     (is (= (counts-2-3 "abcdee") {:first true,  :second false}))
     (is (= (counts-2-3 "ababab") {:first false, :second true}))
-    ;;checksum
+    ;; checksum
     (is (= (checksum ["abcdef"
                       "bababc"
                       "abbcde"
@@ -148,7 +123,10 @@
                       "aabcdd"
                       "abcdee"
                       "ababab"]) 12))
-    (is (= (checksum day-2-input-seq) 6474))
-        ))
+    (is (= (checksum day-2-input-seq) 6474)))
 
+  (testing "day-2-tests-2"
+    (is (= 1 1))
+    
+    (is (= (different-at-idx "abcde" "axcye") [1 3]))))
 
