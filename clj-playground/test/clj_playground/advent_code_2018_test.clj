@@ -105,6 +105,56 @@
                     (seq (char-array st2)))))
 ;; it works until here
 
+;; from https://gist.github.com/trhura/8131492
+(defn combinations [lst k]
+  (letfn [(combinator [x xs]
+            (if (= (count x) k)
+              [x]
+              (when (not (empty? xs))
+                (concat (combinator (concat x [(first xs)]) (rest xs))
+                        (combinator x (rest xs))))))]
+    (combinator nil lst)))
+
+;; works
+
+;; transform in a map :pair :differences
+(defn strings-to-map-of-differences
+  [strings size]
+  (reduce (fn [m pair]
+          (conj m {:pair pair
+                   :differences (apply different-at-idx pair)}))
+        '()
+        (combinations strings size)))
+
+(def maps-seq
+  '({:pair 1 :differences '(0 1)}
+    {:pair 2 :differences '(1)})) 
+
+;; filter maps with :differences length 1
+;; TODO fixme
+(defn filter-with-diff-1
+  [ms]
+  (filter (fn [m]
+            ;;(println (seq (get m :differences)))
+            ;;(println (count (seq (get m :differences))))
+            (= (count (get m :differences)) 1))
+          ms))
+
+;;(filter-with-diff-1 maps-seq)
+
+(defn remove-char-at
+  "remove char at x from string"
+  [s idx]
+  (apply str (remove #(= (get s idx) %) (seq s))))
+
+(defn read-pair-and-remove
+  [m]
+  (remove-char-at (first (:pair m)) (first (:differences m))))
+
+;;(read-pair-and-remove {:pair '("ac" "bc") :differences '(0)})
+
+;; works
+
 (deftest day-2-test
   (testing "day-2-tests-1"
     (is (= (count day-2-input-seq) 250))
@@ -125,8 +175,48 @@
                       "ababab"]) 12))
     (is (= (checksum day-2-input-seq) 6474)))
 
+  (def test-input
+    '("abcde"
+      "fghij"
+      "klmno"
+      "pqrst"
+      "fguij"
+      "axcye"
+      "wvxyz"))
+
+  (def simpler-test-input
+    '("abcdefgh"
+      "abcdefbh"))
+
+  (defn find-common-letters
+    [strings]
+    (read-pair-and-remove
+     (first (filter-with-diff-1
+             (strings-to-map-of-differences strings 2)))))
+  
   (testing "day-2-tests-2"
     (is (= 1 1))
     
-    (is (= (different-at-idx "abcde" "axcye") [1 3]))))
+    (is (= (different-at-idx "abcde" "axcye") [1 3]))
+    (is (= (different-at-idx "fghij" "fguij") [2]))
+    (is (= (remove-char-at "abc" 1) "ac"))
+    (is (= (strings-to-map-of-differences simpler-test-input 2)
+           '({:pair ("abcdefgh" "abcdefbh")
+             :differences (6)})))
+
+    (is (= (filter-with-diff-1
+            '({:pair '("ab" "cd") :differences (0 1)}
+              {:pair '("ac" "ad") :differences (1)}))
+           '({:pair '("ac" "ad") :differences (1)})))
+    
+    (is (= (read-pair-and-remove {:pair '("abc" "adc") :differences '(1)})
+           "ac"))
+
+    (is (= (find-common-letters test-input) "fgij"))
+         
+    (is (= (find-common-letters day-2-input-seq)
+        "mxhwoglxgeauywfkztncvjqr"))
+    )
+
+  )
 
