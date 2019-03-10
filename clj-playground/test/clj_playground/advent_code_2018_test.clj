@@ -127,17 +127,15 @@
         (combinations strings size)))
 
 (def maps-seq
-  '({:pair 1 :differences '(0 1)}
-    {:pair 2 :differences '(1)})) 
+  '({:pair 1 :differences (0 1)}
+    {:pair 2 :differences (1)})) 
 
 ;; filter maps with :differences length 1
-;; TODO fixme
+
 (defn filter-with-diff-1
   [ms]
   (filter (fn [m]
-            ;;(println (seq (get m :differences)))
-            ;;(println (count (seq (get m :differences))))
-            (= (count (get m :differences)) 1))
+            (= 1 (count (get m :differences))))
           ms))
 
 ;;(filter-with-diff-1 maps-seq)
@@ -151,29 +149,11 @@
   [m]
   (remove-char-at (first (:pair m)) (first (:differences m))))
 
-;;(read-pair-and-remove {:pair '("ac" "bc") :differences '(0)})
-
-;; works
-
-(deftest day-2-test
-  (testing "day-2-tests-1"
-    (is (= (count day-2-input-seq) 250))
-    (is (= (counts-2-3 "abcdef") {:first false, :second false}))
-    (is (= (counts-2-3 "bababc") {:first true,  :second true}))
-    (is (= (counts-2-3 "abbcde") {:first true,  :second false}))
-    (is (= (counts-2-3 "abcccd") {:first false, :second true}))
-    (is (= (counts-2-3 "aabcdd") {:first true,  :second false}))
-    (is (= (counts-2-3 "abcdee") {:first true,  :second false}))
-    (is (= (counts-2-3 "ababab") {:first false, :second true}))
-    ;; checksum
-    (is (= (checksum ["abcdef"
-                      "bababc"
-                      "abbcde"
-                      "abcccd"
-                      "aabcdd"
-                      "abcdee"
-                      "ababab"]) 12))
-    (is (= (checksum day-2-input-seq) 6474)))
+  (defn find-common-letters
+    [strings]
+    (read-pair-and-remove
+     (first (filter-with-diff-1
+             (strings-to-map-of-differences strings 2)))))
 
   (def test-input
     '("abcde"
@@ -188,35 +168,56 @@
     '("abcdefgh"
       "abcdefbh"))
 
-  (defn find-common-letters
-    [strings]
-    (read-pair-and-remove
-     (first (filter-with-diff-1
-             (strings-to-map-of-differences strings 2)))))
+  (def test-input-from-reddit
+    '("abcdefgh"
+      "abcdefbh"
+      "abcdqrst"
+      "hjklmnop"))
+
+(deftest day-2-test
+
+  (testing "day-2-1-functions"
+    (is (= (count day-2-input-seq) 250))
+    (is (= (counts-2-3 "abcdef") {:first false, :second false}))
+    (is (= (counts-2-3 "bababc") {:first true,  :second true}))
+    (is (= (counts-2-3 "abbcde") {:first true,  :second false}))
+    (is (= (counts-2-3 "abcccd") {:first false, :second true}))
+    (is (= (counts-2-3 "aabcdd") {:first true,  :second false}))
+    (is (= (counts-2-3 "abcdee") {:first true,  :second false}))
+    (is (= (counts-2-3 "ababab") {:first false, :second true}))
+    (is (= (checksum ["abcdef"
+                      "bababc"
+                      "abbcde"
+                      "abcccd"
+                      "aabcdd"
+                      "abcdee"
+                      "ababab"]) 12)))
   
-  (testing "day-2-tests-2"
-    (is (= 1 1))
-    
+  (testing "day-2-tests-1"
+    (is (= (checksum day-2-input-seq) 6474)))
+
+  (testing "day-2-2-functions"
     (is (= (different-at-idx "abcde" "axcye") [1 3]))
     (is (= (different-at-idx "fghij" "fguij") [2]))
     (is (= (remove-char-at "abc" 1) "ac"))
     (is (= (strings-to-map-of-differences simpler-test-input 2)
            '({:pair ("abcdefgh" "abcdefbh")
-             :differences (6)})))
-
+              :differences (6)})))
+    (is (= (combinations '(:a :b :c) 2) '((:a :b) (:a :c) (:b :c))) )
     (is (= (filter-with-diff-1
             '({:pair '("ab" "cd") :differences (0 1)}
               {:pair '("ac" "ad") :differences (1)}))
            '({:pair '("ac" "ad") :differences (1)})))
-    
     (is (= (read-pair-and-remove {:pair '("abc" "adc") :differences '(1)})
            "ac"))
 
+    (is (= (find-common-letters test-input-from-reddit) "abcdefh"))
+    
     (is (= (find-common-letters test-input) "fgij"))
-         
-    (is (= (find-common-letters day-2-input-seq)
-        "mxhwoglxgeauywfkztncvjqr"))
-    )
+    (is (= (filter-with-diff-1
+            (strings-to-map-of-differences day-2-input-seq 2))
+           '({:pair ("mxhwoglxgeauywfdkztndcvjqr" "mxhwoglxgeauywfikztndcvjqr") :differences (15)})))) 
 
-  )
+  (testing "day-2-tests-2"
+    (is (= (find-common-letters day-2-input-seq) "mxhwoglxgeauywfkztncvjqr"))))
 
