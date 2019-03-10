@@ -148,11 +148,16 @@
           ms))
 
 ;;(filter-with-diff-1 maps-seq)
-
+;; broken!
+;; fixed thanks to teraflop https://www.reddit.com/r/adventofcode/comments/azec8t/2018_day_2_part_2_clojure_misunderstood/ei7zrc8/
 (defn remove-char-at
   "remove char at x from string"
   [s idx]
-  (apply str (remove #(= (get s idx) %) (seq s))))
+  (apply str (keep-indexed (fn [index item]
+                             (if (not= idx index)
+                               item
+                               nil))
+                           (seq s))))
 
 (defn read-pair-and-remove
   ""
@@ -210,11 +215,35 @@
   (testing "day-2-2-functions"
     (is (= (different-at-idx "abcde" "axcye") [1 3]))
     (is (= (different-at-idx "fghij" "fguij") [2]))
+
+    (is (= (remove-char-at "aa" 0) "a"))
+    (is (= (remove-char-at "aa" 1) "a"))
+    (is (= (remove-char-at "aa" 2) "aa"))
+    
+    (is (= (remove-char-at "abc" 0) "bc"))
     (is (= (remove-char-at "abc" 1) "ac"))
+    (is (= (remove-char-at "abc" 2) "ab"))
+
     (is (= (strings-to-map-of-differences simpler-test-input 2)
            '({:pair        ("abcdefgh" "abcdefbh")
               :differences (6)})))
+
+    (is (= (strings-to-map-of-differences '("aa" "ab") 2)
+           '({:pair ("aa" "ab")
+              :differences (1)})))
+
+    (is (= (first
+            (filter-with-diff-1 (strings-to-map-of-differences '("aa" "ab") 2)))
+           {:pair '("aa" "ab")
+            :differences '(1)}))
+
+    ;; fails
+    (is (= (read-pair-and-remove {:pair '("aa" "ab")
+                                  :differences '(1)})
+           "a"))
+    
     (is (= (combinations '(:a :b :c) 2) '((:a :b) (:a :c) (:b :c))) )
+    
     (is (= (filter-with-diff-1
             '({:pair '("ab" "cd") :differences (0 1)}
               {:pair '("ac" "ad") :differences (1)}))
@@ -230,5 +259,11 @@
            '({:pair ("mxhwoglxgeauywfdkztndcvjqr" "mxhwoglxgeauywfikztndcvjqr") :differences (15)})))) 
 
   (testing "day-2-tests-2"
-    (is (= (find-common-letters day-2-input-seq) "mxhwoglxgeauywfkztncvjqr"))))
+    (is (= (find-common-letters day-2-input-seq) "mxhwoglxgeauywfkztndcvjqr"))))
+
+
+
+
+
+
 
