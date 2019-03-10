@@ -8,18 +8,20 @@
   (io/resource "resources/advent2018/day-1-input.txt"))
 
 (defn split-lines-as-int-seq
+  ""
   [url-input]
   (map #(Integer/parseInt %) (apply list (s/split-lines (slurp url-input)))))
-
+ 
 (def day-1-input-seq
   (split-lines-as-int-seq day-1-input))
 
 (defn end-frequency
+  ""
   [xs]
   (reduce + 0 xs))
 
-;; seq of reductions
 (defn freqs-reductions
+  "seq of reductions"
   [xs]
   (reductions + 0 xs))
 
@@ -41,6 +43,7 @@
   (io/resource "resources/advent2018/day-2-input.txt"))
 
 (defn split-lines-as-str-seq
+  ""
   [url-input]
   (apply list (s/split-lines (slurp url-input))))
 
@@ -49,8 +52,8 @@
 
 ;; count values = 2, = 3
 ;; juxt applies both fns at once
-
 (defn or-between-sides
+  ""
   [boolean-couples]
   (reduce
    (fn [m xs]
@@ -60,6 +63,7 @@
    boolean-couples))
 
 (defn counts-2-3
+  ""
   [str]
   (or-between-sides
    (map (juxt
@@ -73,28 +77,34 @@
   [pairs]
   (reduce #(mapv + %1 %2) pairs))
  
-(defn bool->int [b] (if b 1 0))
+(defn bool->int
+  ""
+  [b]
+  (if b 1 0))
 
-;;checksum function
 (defn checksum
+  ""
   [strings]
   (reduce * 1
           (vec-sum
            (map #(map bool->int (vals %))
                 (map counts-2-3 strings)))))
 
-(defn map-fn-on-map-vals [f m]
+(defn map-fn-on-map-vals
+  ""
+  [f m]
   (reduce (fn [altered-map [k v]]
             (assoc altered-map k (f v)))
           {}
           m))
 
-;; values to 0-1
 (defn values-to-zero-one
+  "values to 0-1"
   [maps]
   (map #(map-fn-on-map-vals bool->int %) maps))
 
 (defn different-at-idx
+  ""
   [st1 st2]
   (keep-indexed (fn
                  [idx itm]
@@ -103,10 +113,10 @@
                (map vector
                     (seq (char-array st1))
                     (seq (char-array st2)))))
-;; it works until here
 
-;; from https://gist.github.com/trhura/8131492
-(defn combinations [lst k]
+(defn combinations
+  "from https://gist.github.com/trhura/8131492"
+  [lst k]
   (letfn [(combinator [x xs]
             (if (= (count x) k)
               [x]
@@ -115,14 +125,12 @@
                         (combinator x (rest xs))))))]
     (combinator nil lst)))
 
-;; works
-
-;; transform in a map :pair :differences
 (defn strings-to-map-of-differences
+  "transform in a map :pair :differences"
   [strings size]
   (reduce (fn [m pair]
-          (conj m {:pair pair
-                   :differences (apply different-at-idx pair)}))
+            (conj m {:pair        pair
+                     :differences (apply different-at-idx pair)}))
         '()
         (combinations strings size)))
 
@@ -133,6 +141,7 @@
 ;; filter maps with :differences length 1
 
 (defn filter-with-diff-1
+  ""
   [ms]
   (filter (fn [m]
             (= 1 (count (get m :differences))))
@@ -146,44 +155,46 @@
   (apply str (remove #(= (get s idx) %) (seq s))))
 
 (defn read-pair-and-remove
+  ""
   [m]
   (remove-char-at (first (:pair m)) (first (:differences m))))
 
-  (defn find-common-letters
-    [strings]
-    (read-pair-and-remove
-     (first (filter-with-diff-1
-             (strings-to-map-of-differences strings 2)))))
+(defn find-common-letters
+  ""
+  [strings]
+  (read-pair-and-remove
+   (first (filter-with-diff-1
+           (strings-to-map-of-differences strings 2)))))
 
-  (def test-input
-    '("abcde"
-      "fghij"
-      "klmno"
-      "pqrst"
-      "fguij"
-      "axcye"
-      "wvxyz"))
+(def test-input
+  '("abcde"
+    "fghij"
+    "klmno"
+    "pqrst"
+    "fguij"
+    "axcye"
+    "wvxyz"))
 
-  (def simpler-test-input
-    '("abcdefgh"
-      "abcdefbh"))
+(def simpler-test-input
+  '("abcdefgh"
+    "abcdefbh"))
 
-  (def test-input-from-reddit
-    '("abcdefgh"
-      "abcdefbh"
-      "abcdqrst"
-      "hjklmnop"))
+(def test-input-from-reddit
+  '("abcdefgh"
+    "abcdefbh"
+    "abcdqrst"
+    "hjklmnop"))
 
 (deftest day-2-test
 
   (testing "day-2-1-functions"
     (is (= (count day-2-input-seq) 250))
     (is (= (counts-2-3 "abcdef") {:first false, :second false}))
-    (is (= (counts-2-3 "bababc") {:first true,  :second true}))
-    (is (= (counts-2-3 "abbcde") {:first true,  :second false}))
+    (is (= (counts-2-3 "bababc") {:first true, :second true}))
+    (is (= (counts-2-3 "abbcde") {:first true, :second false}))
     (is (= (counts-2-3 "abcccd") {:first false, :second true}))
-    (is (= (counts-2-3 "aabcdd") {:first true,  :second false}))
-    (is (= (counts-2-3 "abcdee") {:first true,  :second false}))
+    (is (= (counts-2-3 "aabcdd") {:first true, :second false}))
+    (is (= (counts-2-3 "abcdee") {:first true, :second false}))
     (is (= (counts-2-3 "ababab") {:first false, :second true}))
     (is (= (checksum ["abcdef"
                       "bababc"
@@ -201,7 +212,7 @@
     (is (= (different-at-idx "fghij" "fguij") [2]))
     (is (= (remove-char-at "abc" 1) "ac"))
     (is (= (strings-to-map-of-differences simpler-test-input 2)
-           '({:pair ("abcdefgh" "abcdefbh")
+           '({:pair        ("abcdefgh" "abcdefbh")
               :differences (6)})))
     (is (= (combinations '(:a :b :c) 2) '((:a :b) (:a :c) (:b :c))) )
     (is (= (filter-with-diff-1
