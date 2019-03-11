@@ -227,7 +227,6 @@
     (is (= (strings-to-map-of-differences simpler-test-input 2)
            '({:pair        ("abcdefgh" "abcdefbh")
               :differences (6)})))
-
     (is (= (strings-to-map-of-differences '("aa" "ab") 2)
            '({:pair ("aa" "ab")
               :differences (1)})))
@@ -237,7 +236,6 @@
            {:pair '("aa" "ab")
             :differences '(1)}))
 
-    ;; fails
     (is (= (read-pair-and-remove {:pair '("aa" "ab")
                                   :differences '(1)})
            "a"))
@@ -248,12 +246,13 @@
             '({:pair '("ab" "cd") :differences (0 1)}
               {:pair '("ac" "ad") :differences (1)}))
            '({:pair '("ac" "ad") :differences (1)})))
+
     (is (= (read-pair-and-remove {:pair '("abc" "adc") :differences '(1)})
            "ac"))
 
     (is (= (find-common-letters test-input-from-reddit) "abcdefh"))
-    
     (is (= (find-common-letters test-input) "fgij"))
+    
     (is (= (filter-with-diff-1
             (strings-to-map-of-differences day-2-input-seq 2))
            '({:pair ("mxhwoglxgeauywfdkztndcvjqr" "mxhwoglxgeauywfikztndcvjqr") :differences (15)})))) 
@@ -262,8 +261,36 @@
     (is (= (find-common-letters day-2-input-seq) "mxhwoglxgeauywfkztndcvjqr"))))
 
 
+(def day-3-input
+  (io/resource "resources/advent2018/day-3-input.txt"))
+
+(defn split-lines-as-str-seq
+  ""
+  [url-input]
+  (apply list (s/split-lines (slurp url-input))))
+
+(def day-3-input-seq
+  (split-lines-as-str-seq day-3-input))
+
+;; parse and transform to a map :id :left :top :width :height
+(defn str->map
+  [str]
+  (let [id 0 l 0 t 0 w 0 h 0]
+    {:id id
+     :left l
+     :top t
+     :width w
+     :height h}))
 
 
+(deftest day-3-test
+  (testing "day-3-1-functions"
+    (is (= (count day-2-input-seq) 250))
+    (is (= (str->map "#19 @ 836,706: 18x25")
+           {:id 19 :left 836 :top 706 :width 18 :height 25}))
 
+    )
+  (testing "day-3-tests-2"
+    (is (= (count day-2-input-seq) 250))))
 
 
