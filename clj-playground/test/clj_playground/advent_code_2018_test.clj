@@ -272,16 +272,46 @@
 (def day-3-input-seq
   (split-lines-as-str-seq day-3-input))
 
-;; parse and transform to a map :id :left :top :width :height
+(defn parse-id
+  "from #19 returns 19"
+  [str]
+  str)
+
+(defn split-on-char-take-nth
+  [str regx n]
+  (nth (s/split str regx) n))
+
+(split-on-char-take-nth "18x25:" #"x" 0)
+
+;; TODO smaller function
+(defn str->left-top
+  [str]
+  {:left 0
+   :top  0})
+
+;;  parse and transform a string like
+;; "#19 @ 836,706: 18x25"
+;; to a map :id :left :top :width :height
+;; TODO refactor as smaller functions returning maps and then merge
 (defn str->map
   [str]
-  (let [id 0 l 0 t 0 w 0 h 0]
+  (let [id (Integer/parseInt
+            (s/replace (split-on-char-take-nth str #" " 0) #"#" ""))
+        l  (Integer/parseInt
+            (split-on-char-take-nth (s/replace (nth (s/split str #" ") 2) #":" "")
+                                    #"," 0))
+        t  (Integer/parseInt (split-on-char-take-nth
+                              (s/replace (nth (s/split str #" ") 2) #":" "")
+                              #"," 1))
+        w  (Integer/parseInt (split-on-char-take-nth
+                              (nth (s/split str #" ") 3)
+                              #"x" 0))
+        h  (Integer/parseInt(split-on-char-take-nth (nth (s/split str #" ") 3) #"x" 1))]
     {:id id
      :left l
      :top t
      :width w
      :height h}))
-
 
 (deftest day-3-test
   (testing "day-3-1-functions"
