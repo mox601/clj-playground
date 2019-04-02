@@ -272,28 +272,57 @@
 (def day-3-input-seq
   (split-lines-as-str-seq day-3-input))
 
-(defn parse-id
-  "from #19 returns 19"
-  [str]
-  str)
-
 (defn split-on-char-take-nth
   [str regx n]
   (nth (s/split str regx) n))
 
 (split-on-char-take-nth "18x25:" #"x" 0)
 
-;; TODO smaller function
+;; smaller functions
 (defn str->left-top
   [str]
-  {:left 0
-   :top  0})
+  {:left (Integer/parseInt
+            (split-on-char-take-nth str #"," 0))
+   :top  (Integer/parseInt (split-on-char-take-nth
+                              (s/replace str #":" "")
+                              #"," 1))})
+
+(defn str->id
+  [str]
+  {:id (Integer/parseInt
+   (s/replace str #"#" ""))})
+
+;; works
+(defn str->width-height
+  [str]
+  (let [split-str  (s/split str #"x")]
+    {:width  (Integer/parseInt (nth split-str 0))
+     :height (Integer/parseInt (nth split-str 1))}))
+
+(str->id (split-on-char-take-nth "#19 @ 836,706: 18x25" #" " 0))
+(str->left-top (split-on-char-take-nth "#19 @ 836,706: 18x25" #" " 2))
+(str->width-height (split-on-char-take-nth "#19 @ 836,706: 18x25" #" " 3))
+;; works
 
 ;;  parse and transform a string like
 ;; "#19 @ 836,706: 18x25"
 ;; to a map :id :left :top :width :height
-;; TODO refactor as smaller functions returning maps and then merge
+;; merging N maps:
 (defn str->map
+  [str]
+  ;; split just once
+  (let [split-str (s/split str #" ")]
+    (merge
+     (str->id           (nth split-str 0))
+     (str->left-top     (nth split-str 2))
+     (str->width-height (nth split-str 3)))))
+
+(str->map "#19 @ 836,706: 18x25")
+;; works
+
+;; refactored as smaller functions returning maps and then merge
+;;commented out
+(comment (defn str->map
   [str]
   (let [id (Integer/parseInt
             (s/replace (split-on-char-take-nth str #" " 0) #"#" ""))
@@ -311,7 +340,12 @@
      :left l
      :top t
      :width w
-     :height h}))
+     :height h})))
+
+(def claims-test
+  [{:id 1 :left 1 :top 3 :width 4 :height 4}
+   {:id 2 :left 3 :top 1 :width 4 :height 4}
+   {:id 3 :left 5 :top 5 :width 2 :height 2}])
 
 (deftest day-3-test
   (testing "day-3-1-functions"
