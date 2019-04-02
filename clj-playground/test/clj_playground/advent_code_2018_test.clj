@@ -279,13 +279,12 @@
 (split-on-char-take-nth "18x25:" #"x" 0)
 
 ;; smaller functions
+;; 836,706:
 (defn str->left-top
   [str]
-  {:left (Integer/parseInt
-            (split-on-char-take-nth str #"," 0))
-   :top  (Integer/parseInt (split-on-char-take-nth
-                              (s/replace str #":" "")
-                              #"," 1))})
+  (let [split-str (s/split str #",")]  
+    {:left (Integer/parseInt (nth split-str 0))
+     :top  (Integer/parseInt (s/replace (nth split-str 1) #":" ""))}))
 
 (defn str->id
   [str]
@@ -293,6 +292,7 @@
    (s/replace str #"#" ""))})
 
 ;; works
+;; 18x25
 (defn str->width-height
   [str]
   (let [split-str  (s/split str #"x")]
