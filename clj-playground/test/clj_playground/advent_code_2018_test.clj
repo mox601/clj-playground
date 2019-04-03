@@ -347,6 +347,24 @@
    {:id 2 :left 3 :top 1 :width 4 :height 4}
    {:id 3 :left 5 :top 5 :width 2 :height 2}])
 
+(defn to-empty-matrix
+  [m]
+  (let [rows (+ (get m :top) (get m :height))
+        cols (+ (get m :left) (get m :width))]
+    (vec (repeat rows (vec (repeat cols 0))))))
+
+;;returns row x columns dimensions of enclosing matrix
+(to-empty-matrix {:id 2 :left 3 :top 1 :width 4 :height 4})
+
+
+
+(defn print-matrix
+  [mat]
+  (map #(println %)  mat))
+
+(print-matrix [[1 1 0] [1 1 0]])
+
+
 (deftest day-3-test
   (testing "day-3-1-functions"
     (is (= (count day-2-input-seq) 250))
