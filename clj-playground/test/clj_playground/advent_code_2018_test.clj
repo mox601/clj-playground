@@ -351,9 +351,9 @@
      :height h})))
 
 (def claims-test
-  [{:id 1 :left 1 :top 3 :width 4 :height 4}
-   {:id 2 :left 3 :top 1 :width 4 :height 4}
-   {:id 3 :left 5 :top 5 :width 2 :height 2}])
+  (seq [{:id 1 :left 1 :top 3 :width 4 :height 4}
+        {:id 2 :left 3 :top 1 :width 4 :height 4}
+        {:id 3 :left 5 :top 5 :width 2 :height 2}]))
 
 (defn r-c-empty-matrix
   [r c]
@@ -388,6 +388,10 @@
 ;;returns row x columns dimensions of enclosing matrix
 ;;(to-empty-matrix {:id 2 :left 3 :top 1 :width 4 :height 4})
 
+  (defn sum-items
+    [empty-matrix claims-seq]
+    (reduce apply-inc-to-rows empty-matrix claims-seq))
+
 (deftest day-3-test
   (testing "day-3-1-functions"
     (is (= (count day-2-input-seq) 250))
@@ -421,17 +425,22 @@
                      {:top 1 :height 1 :left 0 :width 1}]))
            (seq [(seq [0 0])
                  (seq [1 1])])))
-
+;; same test
+    (is (= (sum-items [[0 0]
+                       [0 0]]
+                      (seq
+                    [{:top 1 :height 1 :left 1 :width 1}
+                     {:top 1 :height 1 :left 0 :width 1}]))
+            (seq [(seq [0 0])
+                  (seq [1 1])])))
 
     (is (= (count day-3-input-seq) 1233))
     
-    (is (= (count (parse-seq-to-maps day-3-input-seq)) 1233))
+    (is (= (count (parse-seq-to-maps day-3-input-seq)) 1233)))
     
     ;; works
     ;;TODO read file to sequence of inputs
     
   (testing "day-3-tests-2"
-    (is (= (count day-3-input-seq) 1233)))))
-
-
+    (is (= (count day-3-input-seq) 1233))))
 
