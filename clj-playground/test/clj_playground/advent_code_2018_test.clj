@@ -1,7 +1,7 @@
 (ns clj-playground.advent-code-2018-test
   (:require [clojure.test :refer :all])
-  (:require [clojure.string :as s])
-  (:require [clojure.set :as sets])
+  (:require [clojure.string  :as s])
+  (:require [clojure.set     :as sets])
   (:require [clojure.java.io :as io]))
 
 (def day-1-input
@@ -320,6 +320,14 @@
 (str->map "#19 @ 836,706: 18x25")
 ;; works
 
+
+(defn parse-seq-to-maps
+  [s]
+  (map str->map s))
+
+(parse-seq-to-maps day-3-input-seq)
+;; works
+
 ;; refactored as smaller functions returning maps and then merge
 ;;commented out
 (comment (defn str->map
@@ -347,23 +355,38 @@
    {:id 2 :left 3 :top 1 :width 4 :height 4}
    {:id 3 :left 5 :top 5 :width 2 :height 2}])
 
-(defn to-empty-matrix
-  [m]
-  (let [rows (+ (get m :top) (get m :height))
-        cols (+ (get m :left) (get m :width))]
-    (vec (repeat rows (vec (repeat cols 0))))))
+(defn r-c-empty-matrix
+  [r c]
+  (vec (repeat r (vec (repeat c 0)))))
+
+;; map this on every row
+;; works
+(defn inc-item-between
+  [s a-map]
+  (let [{from :left width :width} a-map
+        to (+ width from)]
+    (map-indexed (fn [idx itm]
+                   (if (and (<= from idx)
+                            (< idx to))
+                      (inc itm)
+                      itm))
+                 s)))
+
+(defn apply-inc-to-rows
+  [m a-map]
+  (let [{top :top height :height} a-map
+        to (+ top height)]
+    (map-indexed (fn [idx itm]
+                   ;; [idx itm]
+                   (if (and (<= top idx)
+                            (< idx to))
+                     (inc-item-between itm a-map)
+                     (seq itm))
+                   )
+                 m)))
 
 ;;returns row x columns dimensions of enclosing matrix
-(to-empty-matrix {:id 2 :left 3 :top 1 :width 4 :height 4})
-
-
-
-(defn print-matrix
-  [mat]
-  (map #(println %)  mat))
-
-(print-matrix [[1 1 0] [1 1 0]])
-
+;;(to-empty-matrix {:id 2 :left 3 :top 1 :width 4 :height 4})
 
 (deftest day-3-test
   (testing "day-3-1-functions"
@@ -371,8 +394,44 @@
     (is (= (str->map "#19 @ 836,706: 18x25")
            {:id 19 :left 836 :top 706 :width 18 :height 25}))
 
-    )
+    (is (= (inc-item-between [0 0 1] {:left 1 :width 2})
+           [0 1 2]))
+
+    (is (= (r-c-empty-matrix 2 2) [[0 0] [0 0]]))
+
+    (is (= (apply-inc-to-rows [[0 0 0] [0 0 0] [0 0 0]]
+                              {:top  1 :height 2 :left 1 :width 1})
+           (seq [(seq [0 0 0])
+                 (seq [0 1 0])
+                 (seq [0 1 0])])))
+
+    (is (= (apply-inc-to-rows (apply-inc-to-rows [[0 0]
+                                                  [0 0]]
+                                                 {:top  1 :height 1 :left 1 :width 1})
+                              {:top 1 :height 1 :left 0 :width 1})
+           (seq [(seq [0 0])
+                 (seq [1 1])])))
+    
+    ;; reduce apply-inc-to-rows from empty matrix on sequence of inputs
+    (is (= (reduce apply-inc-to-rows
+                   [[0 0]
+                    [0 0]]
+                   (seq
+                    [{:top 1 :height 1 :left 1 :width 1}
+                     {:top 1 :height 1 :left 0 :width 1}]))
+           (seq [(seq [0 0])
+                 (seq [1 1])])))
+
+
+    (is (= (count day-3-input-seq) 1233))
+    
+    (is (= (count (parse-seq-to-maps day-3-input-seq)) 1233))
+    
+    ;; works
+    ;;TODO read file to sequence of inputs
+    
   (testing "day-3-tests-2"
-    (is (= (count day-2-input-seq) 250))))
+    (is (= (count day-3-input-seq) 1233)))))
+
 
 

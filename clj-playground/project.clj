@@ -6,7 +6,7 @@
 
   :main clj-playground.core
 
-  :dependencies [[org.clojure/clojure "1.9.0"]
+  :dependencies [[org.clojure/clojure "1.10.0"]
                  [org.clojure/test.check "0.10.0-alpha2"]
                  [com.rpl/specter "1.1.0"]
                  [cheshire "5.8.0"]])
