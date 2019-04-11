@@ -393,10 +393,18 @@
     (reduce apply-inc-to-rows empty-matrix claims-seq))
 
 (defn count-claimed-sq-inches
-  [mat]
-  ;; TODO
-  ;; count items > 1
-  )
+  [s]
+  (reduce (fn [s itm]
+            ;; count items > 1
+            (if (> itm 1)
+              (inc s)
+              s))
+          0
+          s))
+
+(count-claimed-sq-inches '(1 0 0 2 4))
+;; works
+;; TODO do it on all rows
 
 (deftest day-3-test
   (testing "day-3-1-functions"
