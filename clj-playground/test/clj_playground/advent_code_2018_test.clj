@@ -358,7 +358,7 @@
 (defn r-c-empty-matrix
   [r c]
   (vec (repeat r (vec (repeat c 0)))))
-
+(r-c-empty-matrix 2 2)
 ;; map this on every row
 ;; works
 (defn inc-item-between
@@ -392,6 +392,12 @@
     [empty-matrix claims-seq]
     (reduce apply-inc-to-rows empty-matrix claims-seq))
 
+(defn count-claimed-sq-inches
+  [mat]
+  ;; TODO
+  ;; count items > 1
+  )
+
 (deftest day-3-test
   (testing "day-3-1-functions"
     (is (= (count day-2-input-seq) 250))
@@ -418,29 +424,32 @@
     
     ;; reduce apply-inc-to-rows from empty matrix on sequence of inputs
     (is (= (reduce apply-inc-to-rows
-                   [[0 0]
-                    [0 0]]
+                   (r-c-empty-matrix 2 2)
                    (seq
                     [{:top 1 :height 1 :left 1 :width 1}
                      {:top 1 :height 1 :left 0 :width 1}]))
            (seq [(seq [0 0])
                  (seq [1 1])])))
 ;; same test
-    (is (= (sum-items [[0 0]
-                       [0 0]]
+    (is (= (sum-items (r-c-empty-matrix 2 2)
                       (seq
-                    [{:top 1 :height 1 :left 1 :width 1}
-                     {:top 1 :height 1 :left 0 :width 1}]))
-            (seq [(seq [0 0])
-                  (seq [1 1])])))
+                       [{:top 1 :height 1 :left 1 :width 1}
+                        {:top 1 :height 1 :left 0 :width 1}]))
+           (seq [(seq [0 0])
+                 (seq [1 1])])))
+    ;; count square inches claimed by gt 1 claims
+    
+    (is (= (count day-3-input-seq)
+           1233))
+    
+    (is (= (count (parse-seq-to-maps day-3-input-seq))
+           1233)))
+    
+  ;; works
 
-    (is (= (count day-3-input-seq) 1233))
-    
-    (is (= (count (parse-seq-to-maps day-3-input-seq)) 1233)))
-    
-    ;; works
-    ;;TODO read file to sequence of inputs
+  ;;TODO read file to sequence of inputs
     
   (testing "day-3-tests-2"
-    (is (= (count day-3-input-seq) 1233))))
+    (is (= (count day-3-input-seq)
+           1233))))
 
