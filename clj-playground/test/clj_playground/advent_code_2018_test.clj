@@ -441,6 +441,13 @@
                         {:top 1 :height 1 :left 0 :width 1}]))
            (seq [(seq [0 0])
                  (seq [1 1])])))
+    ;; overlapping
+    (is (= (sum-items (r-c-empty-matrix 2 2)
+                      (seq
+                       [{:top 1 :height 1 :left 0 :width 1}
+                        {:top 1 :height 1 :left 0 :width 1}]))
+           (seq [(seq [0 0])
+                 (seq [2 0])])))
     ;; count square inches claimed by gt 1 claims
     
     (is (= (count day-3-input-seq)
