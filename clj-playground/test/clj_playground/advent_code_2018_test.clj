@@ -402,10 +402,6 @@
           0
           s))
 
-(count-claimed-sq-inches '(1 0 0 2 4))
-;; works
-;; TODO do it on all rows
-
 (deftest day-3-test
   (testing "day-3-1-functions"
     (is (= (count day-2-input-seq) 250))
@@ -451,7 +447,14 @@
            1233))
     
     (is (= (count (parse-seq-to-maps day-3-input-seq))
-           1233)))
+           1233))
+    (is (= (count-claimed-sq-inches '(1 0 0 2 4))
+           2))
+
+    (is (= (reduce + 0 (map #(count-claimed-sq-inches %) '((1 4) (1 2))))
+           2))
+
+    )
     
   ;; works
 
