@@ -455,6 +455,7 @@
     
     (is (= (count (parse-seq-to-maps day-3-input-seq))
            1233))
+
     (is (= (count-claimed-sq-inches '(1 0 0 2 4))
            2))
 
