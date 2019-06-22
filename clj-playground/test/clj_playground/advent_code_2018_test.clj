@@ -413,53 +413,53 @@
 
     (is (= (r-c-empty-matrix 2 2) [[0 0] [0 0]]))
 
-    (is (= (apply-inc-to-rows [[0 0 0] [0 0 0] [0 0 0]]
+    (is (= (apply-inc-to-rows [[0 0 0]
+                               [0 0 0]
+                               [0 0 0]]
                               {:top  1 :height 2 :left 1 :width 1})
-           (seq [(seq [0 0 0])
-                 (seq [0 1 0])
-                 (seq [0 1 0])])))
+           [[0 0 0]
+            [0 1 0]
+            [0 1 0]]))
 
     (is (= (apply-inc-to-rows (apply-inc-to-rows [[0 0]
                                                   [0 0]]
                                                  {:top  1 :height 1 :left 1 :width 1})
                               {:top 1 :height 1 :left 0 :width 1})
-           (seq [(seq [0 0])
-                 (seq [1 1])])))
+           [[0 0]
+            [1 1]]))
     
     ;; reduce apply-inc-to-rows from empty matrix on sequence of inputs
     (is (= (reduce apply-inc-to-rows
                    (r-c-empty-matrix 2 2)
-                   (seq
                     [{:top 1 :height 1 :left 1 :width 1}
-                     {:top 1 :height 1 :left 0 :width 1}]))
-           (seq [(seq [0 0])
-                 (seq [1 1])])))
+                     {:top 1 :height 1 :left 0 :width 1}])
+           [[0 0]
+            [1 1]]))
 ;; same test
-    (is (= (sum-items (r-c-empty-matrix 2 2)
-                      (seq
+    (is (= (sum-items (r-c-empty-matrix 2 2)                   
                        [{:top 1 :height 1 :left 1 :width 1}
-                        {:top 1 :height 1 :left 0 :width 1}]))
-           (seq [(seq [0 0])
-                 (seq [1 1])])))
+                        {:top 1 :height 1 :left 0 :width 1}])
+           [[0 0]
+            [1 1]]))
     ;; overlapping
     (is (= (sum-items (r-c-empty-matrix 2 2)
-                      (seq
                        [{:top 1 :height 1 :left 0 :width 1}
-                        {:top 1 :height 1 :left 0 :width 1}]))
-           (seq [(seq [0 0])
-                 (seq [2 0])])))
+                        {:top 1 :height 1 :left 0 :width 1}])
+           [[0 0]
+            [2 0]]))
     ;; count square inches claimed by gt 1 claims
     
     (is (= (count day-3-input-seq)
            1233))
+
     
     (is (= (count (parse-seq-to-maps day-3-input-seq))
            1233))
 
-    (is (= (count-claimed-sq-inches '(1 0 0 2 4))
+    (is (= (count-claimed-sq-inches [1 0 0 2 4])
            2))
 
-    (is (= (reduce + 0 (map #(count-claimed-sq-inches %) '((1 4) (1 2))))
+    (is (= (reduce + 0 (map #(count-claimed-sq-inches %) '([1 4] [1 2])))
            2))
 
     )
