@@ -452,7 +452,6 @@
     (is (= (count day-3-input-seq)
            1233))
 
-    
     (is (= (count (parse-seq-to-maps day-3-input-seq))
            1233))
 
@@ -470,5 +469,19 @@
     
   (testing "day-3-tests-2"
     (is (= (count day-3-input-seq)
-           1233))))
+           1233))
+
+    (def day-3-input-maps
+      (map str->map day-3-input-seq))
+    
+    (def claims
+      (sum-items (r-c-empty-matrix 1000 1000) day-3-input-maps))
+
+    ;; 396 was too low    
+    (is (= (reduce + 0 (map #(count-claimed-sq-inches %) claims))
+           101196))
+    ;;works!
+
+    
+    ))
 
