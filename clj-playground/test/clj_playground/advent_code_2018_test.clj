@@ -1,5 +1,5 @@
 (ns clj-playground.advent-code-2018-test
-  (:require [clojure.test :refer :all])
+  (:require [clojure.test    :refer :all])
   (:require [clojure.string  :as s])
   (:require [clojure.set     :as sets])
   (:require [clojure.java.io :as io]))
@@ -109,7 +109,8 @@
   (keep-indexed (fn
                  [idx itm]
                  ;; idx if different, nil if same
-                 (if (not= (itm 0) (itm 1)) idx))                          
+                  (if (not= (itm 0) (itm 1))
+                    idx))                          
                (map vector
                     (seq (char-array st1))
                     (seq (char-array st2)))))
@@ -195,11 +196,11 @@
   (testing "day-2-1-functions"
     (is (= (count day-2-input-seq) 250))
     (is (= (counts-2-3 "abcdef") {:first false, :second false}))
-    (is (= (counts-2-3 "bababc") {:first true, :second true}))
-    (is (= (counts-2-3 "abbcde") {:first true, :second false}))
+    (is (= (counts-2-3 "bababc") {:first true,  :second true}))
+    (is (= (counts-2-3 "abbcde") {:first true,  :second false}))
     (is (= (counts-2-3 "abcccd") {:first false, :second true}))
-    (is (= (counts-2-3 "aabcdd") {:first true, :second false}))
-    (is (= (counts-2-3 "abcdee") {:first true, :second false}))
+    (is (= (counts-2-3 "aabcdd") {:first true,  :second false}))
+    (is (= (counts-2-3 "abcdee") {:first true,  :second false}))
     (is (= (counts-2-3 "ababab") {:first false, :second true}))
     (is (= (checksum ["abcdef"
                       "bababc"
@@ -245,7 +246,7 @@
     (is (= (filter-with-diff-1
             '({:pair '("ab" "cd") :differences (0 1)}
               {:pair '("ac" "ad") :differences (1)}))
-           '({:pair '("ac" "ad") :differences (1)})))
+           '({:pair '("ac" "ad")  :differences (1)})))
 
     (is (= (read-pair-and-remove {:pair '("abc" "adc") :differences '(1)})
            "ac"))
@@ -263,11 +264,6 @@
 
 (def day-3-input
   (io/resource "resources/advent2018/day-3-input.txt"))
-
-(defn split-lines-as-str-seq
-  ""
-  [url-input]
-  (apply list (s/split-lines (slurp url-input))))
 
 (def day-3-input-seq
   (split-lines-as-str-seq day-3-input))
@@ -299,6 +295,7 @@
     {:width  (Integer/parseInt (nth split-str 0))
      :height (Integer/parseInt (nth split-str 1))}))
 
+;; TODO move as tests
 (str->id (split-on-char-take-nth "#19 @ 836,706: 18x25" #" " 0))
 (str->left-top (split-on-char-take-nth "#19 @ 836,706: 18x25" #" " 2))
 (str->width-height (split-on-char-take-nth "#19 @ 836,706: 18x25" #" " 3))
@@ -319,7 +316,6 @@
 
 (str->map "#19 @ 836,706: 18x25")
 ;; works
-
 
 (defn parse-seq-to-maps
   [s]
@@ -358,7 +354,7 @@
 (defn r-c-empty-matrix
   [r c]
   (vec (repeat r (vec (repeat c 0)))))
-(r-c-empty-matrix 2 2)
+
 ;; map this on every row
 ;; works
 (defn inc-item-between
@@ -377,7 +373,6 @@
   (let [{top :top height :height} a-map
         to (+ top height)]
     (map-indexed (fn [idx itm]
-                   ;; [idx itm]
                    (if (and (<= top idx)
                             (< idx to))
                      (inc-item-between itm a-map)
@@ -401,6 +396,18 @@
               s))
           0
           s))
+
+(def day-3-input-maps
+  (map str->map day-3-input-seq))
+    
+(def claims
+  (sum-items (r-c-empty-matrix 1000 1000) day-3-input-maps))
+;; works
+
+;; doing
+(defn plus
+      [a b]
+      (+ a b))
 
 (deftest day-3-test
   (testing "day-3-1-functions"
@@ -460,28 +467,28 @@
 
     (is (= (reduce + 0 (map #(count-claimed-sq-inches %) '([1 4] [1 2])))
            2))
-
     )
-    
-  ;; works
 
-  ;;TODO read file to sequence of inputs
+
     
   (testing "day-3-tests-2"
+  
     (is (= (count day-3-input-seq)
            1233))
 
-    (def day-3-input-maps
-      (map str->map day-3-input-seq))
-    
-    (def claims
-      (sum-items (r-c-empty-matrix 1000 1000) day-3-input-maps))
-
-    ;; 396 was too low    
+    ;; 396 was too low
     (is (= (reduce + 0 (map #(count-claimed-sq-inches %) claims))
            101196))
     ;;works!
 
+    ;; doing
+    (is (= (reduce plus {} [{:id 1 :left 1 :top 3 :width 4 :height 4}
+                            {:id 2 :left 1 :top 3 :width 4 :height 4}])
+           {}))
     
     ))
+
+
+
+
 
