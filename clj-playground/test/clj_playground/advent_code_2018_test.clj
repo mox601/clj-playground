@@ -376,14 +376,14 @@
                             (< idx to))
                      (inc-item-between itm a-map)
                      (seq itm)))
-                 m)))
-
+                  m)))
+    
 ;;returns row x columns dimensions of enclosing matrix
 ;;(to-empty-matrix {:id 2 :left 3 :top 1 :width 4 :height 4})
 
-  (defn sum-items
-    [empty-matrix claims-seq]
-    (reduce apply-inc-to-rows empty-matrix claims-seq))
+(defn sum-items
+  [empty-matrix claims-seq]
+  (reduce apply-inc-to-rows empty-matrix claims-seq))
 
 (defn count-claimed-sq-inches
   [s]
@@ -438,20 +438,20 @@
     ;; reduce apply-inc-to-rows from empty matrix on sequence of inputs
     (is (= (reduce apply-inc-to-rows
                    (r-c-empty-matrix 2 2)
-                    [{:top 1 :height 1 :left 1 :width 1}
-                     {:top 1 :height 1 :left 0 :width 1}]))
+                   [{:top 1 :height 1 :left 1 :width 1}
+                    {:top 1 :height 1 :left 0 :width 1}]))
            [[0 0]
-            [1 1]]))
+            [1 1]])
 ;; same test
     (is (= (sum-items (r-c-empty-matrix 2 2)
-                       [{:top 1 :height 1 :left 1 :width 1}
-                        {:top 1 :height 1 :left 0 :width 1}]))
+                      [{:top 1 :height 1 :left 1 :width 1}
+                       {:top 1 :height 1 :left 0 :width 1}]))
            [[0 0]
             [1 1]])
     ;; overlapping
     (is (= (sum-items (r-c-empty-matrix 2 2)
-                       [{:top 1 :height 1 :left 0 :width 1}
-                        {:top 1 :height 1 :left 0 :width 1}]))
+                      [{:top 1 :height 1 :left 0 :width 1}
+                       {:top 1 :height 1 :left 0 :width 1}]))
            [[0 0]
             [2 0]])
     ;; count square inches claimed by gt 1 claims
@@ -466,7 +466,7 @@
            2))
 
     (is (= (reduce + 0 (map #(count-claimed-sq-inches %) '([1 4] [1 2])))
-           2))
+           2)))
 
   (testing "day-3-tests-2"
   
@@ -480,7 +480,7 @@
 
     ;; doing
     (comment
-          (is (= (reduce plus {} [{:id 1 :left 1 :top 3 :width 4 :height 4}
-                            {:id 2 :left 1 :top 3 :width 4 :height 4}])
-           {})))))
+          (is (= (reduce plus {} [{:id 1 :left 1 :top 3 :width 4 :height 4}])
+                            {:id 2 :left 1 :top 3 :width 4 :height 4}))
+           {})))
 
