@@ -408,7 +408,6 @@
       (+ a b))
 
 (deftest day-3-test
-
   
   (testing "day-3-1-functions"
     (is (= (count day-2-input-seq) 250))
@@ -480,7 +479,10 @@
 
     ;; doing
     (comment
-          (is (= (reduce plus {} [{:id 1 :left 1 :top 3 :width 4 :height 4}])
-                            {:id 2 :left 1 :top 3 :width 4 :height 4}))
+      (is (=
+           (reduce plus
+                   {}
+                   [{:id 1 :left 1 :top 3 :width 4 :height 4}])
+           {:id 2 :left 1 :top 3 :width 4 :height 4}))
            {})))
 
