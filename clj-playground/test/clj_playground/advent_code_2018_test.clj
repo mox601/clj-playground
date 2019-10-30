@@ -67,9 +67,9 @@
   [str]
   (or-between-sides
    (map (juxt
-        (fn [x] (= 2 x))
-        (fn [x] (= 3 x)))
-       (set (vals (frequencies str))))))
+         (fn [x] (= 2 x))
+         (fn [x] (= 3 x)))
+        (set (vals (frequencies str))))))
 
 ;; simpler, doesnt preserve structure
 ;; (map #(if % 1 0) (vals {:a true :b false}))
@@ -109,7 +109,7 @@
   (keep-indexed (fn
                  [idx itm]
                  ;; idx if different, nil if same
-                  (if (not= (itm 0) (itm 1))
+                 (if (not= (itm 0) (itm 1))
                     idx))                          
                (map vector
                     (seq (char-array st1))
@@ -241,7 +241,7 @@
                                   :differences '(1)})
            "a"))
     
-    (is (= (combinations '(:a :b :c) 2) '((:a :b) (:a :c) (:b :c))) )
+    (is (= (combinations '(:a :b :c) 2) '((:a :b) (:a :c) (:b :c))))
     
     (is (= (filter-with-diff-1
             '({:pair '("ab" "cd") :differences (0 1)}
@@ -284,8 +284,7 @@
 
 (defn str->id
   [str]
-  {:id (Integer/parseInt
-   (s/replace str #"#" ""))})
+  {:id (Integer/parseInt (s/replace str #"#" ""))})
 
 ;; works
 ;; 18x25
@@ -326,7 +325,7 @@
 
 ;; refactored as smaller functions returning maps and then merge
 ;;commented out
-(comment (defn str->map
+(comment (defn str->map)
   [str]
   (let [id (Integer/parseInt
             (s/replace (split-on-char-take-nth str #" " 0) #"#" ""))
@@ -344,7 +343,7 @@
      :left l
      :top t
      :width w
-     :height h})))
+     :height h}))
 
 (def claims-test
   (seq [{:id 1 :left 1 :top 3 :width 4 :height 4}
@@ -376,8 +375,7 @@
                    (if (and (<= top idx)
                             (< idx to))
                      (inc-item-between itm a-map)
-                     (seq itm))
-                   )
+                     (seq itm)))
                  m)))
 
 ;;returns row x columns dimensions of enclosing matrix
@@ -410,6 +408,8 @@
       (+ a b))
 
 (deftest day-3-test
+
+  
   (testing "day-3-1-functions"
     (is (= (count day-2-input-seq) 250))
     (is (= (str->map "#19 @ 836,706: 18x25")
@@ -439,21 +439,21 @@
     (is (= (reduce apply-inc-to-rows
                    (r-c-empty-matrix 2 2)
                     [{:top 1 :height 1 :left 1 :width 1}
-                     {:top 1 :height 1 :left 0 :width 1}])
+                     {:top 1 :height 1 :left 0 :width 1}]))
            [[0 0]
             [1 1]]))
 ;; same test
-    (is (= (sum-items (r-c-empty-matrix 2 2)                   
+    (is (= (sum-items (r-c-empty-matrix 2 2)
                        [{:top 1 :height 1 :left 1 :width 1}
-                        {:top 1 :height 1 :left 0 :width 1}])
+                        {:top 1 :height 1 :left 0 :width 1}]))
            [[0 0]
-            [1 1]]))
+            [1 1]])
     ;; overlapping
     (is (= (sum-items (r-c-empty-matrix 2 2)
                        [{:top 1 :height 1 :left 0 :width 1}
-                        {:top 1 :height 1 :left 0 :width 1}])
+                        {:top 1 :height 1 :left 0 :width 1}]))
            [[0 0]
-            [2 0]]))
+            [2 0]])
     ;; count square inches claimed by gt 1 claims
     
     (is (= (count day-3-input-seq)
@@ -467,10 +467,7 @@
 
     (is (= (reduce + 0 (map #(count-claimed-sq-inches %) '([1 4] [1 2])))
            2))
-    )
 
-
-    
   (testing "day-3-tests-2"
   
     (is (= (count day-3-input-seq)
@@ -482,13 +479,8 @@
     ;;works!
 
     ;; doing
-    (is (= (reduce plus {} [{:id 1 :left 1 :top 3 :width 4 :height 4}
+    (comment
+          (is (= (reduce plus {} [{:id 1 :left 1 :top 3 :width 4 :height 4}
                             {:id 2 :left 1 :top 3 :width 4 :height 4}])
-           {}))
-    
-    ))
-
-
-
-
+           {})))))
 
