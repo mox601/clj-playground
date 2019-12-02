@@ -1,7 +1,7 @@
 (ns clj-playground.advent-code-2018-test
   (:require [clojure.test    :refer :all])
   (:require [clojure.string  :as s])
-  (:require [clojure.set     :as sets])
+;;  (:require [clojure.set     :as sets])
   (:require [clojure.java.io :as io]))
 
 (def day-1-input
@@ -121,7 +121,7 @@
   (letfn [(combinator [x xs]
             (if (= (count x) k)
               [x]
-              (when (not (empty? xs))
+              (when (seq xs)
                 (concat (combinator (concat x [(first xs)]) (rest xs))
                         (combinator x (rest xs))))))]
     (combinator nil lst)))
@@ -402,10 +402,42 @@
   (sum-items (r-c-empty-matrix 1000 1000) day-3-input-maps))
 ;; works
 
-;; doing
-(defn plus
+
+    (defn fill
+      [start length]
+      (range start (+ start length)))
+    
+    (defn overlaps
       [a b]
-      (+ a b))
+      (let [{a_left :left a_top :top a_width :width a_height :height} a
+            {b_left :left b_top :top b_width :width b_height :height} b]
+        (and 
+         (some (set (fill a_left a_width)) (fill b_left b_width))
+         (some (set (fill a_top  a_height)) (fill b_top b_height)))))
+    
+    (defn non-overlapping
+      [claims]
+      (reduce (fn [c next]
+                (do
+                  (println c next)
+                  (if (overlaps c next)
+                    c
+                    next)))
+              {}
+              claims))
+
+
+;; working on it
+(comment
+  (def two-claims [{:left 1 :top 1 :width 1 :height 1} {:left 1 :top 2 :width 1 :height 1}])
+  
+(reduce (fn [acc item] 
+                                                (do
+                                                  (println acc item)
+                                                  item))
+                                              {}
+                                              two-claims)
+)
 
 (deftest day-3-test
   
@@ -475,14 +507,13 @@
     ;; 396 was too low
     (is (= (reduce + 0 (map #(count-claimed-sq-inches %) claims))
            101196))
-    ;;works!
-
+    ;;works!    
     ;; doing
     (comment
       (is (=
-           (reduce plus
-                   {}
-                   [{:id 1 :left 1 :top 3 :width 4 :height 4}])
-           {:id 2 :left 1 :top 3 :width 4 :height 4}))
-           {})))
+           (non-overlapping [
+                             {:id 1 :left 1 :top 3 :width 4 :height 4}
+                             {:id 2 :left 1 :top 3 :width 4 :height 4}
+                             ])
+           {:id 2 :left 1 :top 3 :width 4 :height 4})))))
 
