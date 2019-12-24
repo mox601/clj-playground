@@ -10,7 +10,7 @@
   ""
   [url-input]
   (map #(Integer/parseInt %) (apply list (s/split-lines (slurp url-input)))))
- 
+
 (def day-1-input-seq
   (split-lines-as-int-seq day-1-input))
 
@@ -19,12 +19,12 @@
   (- (quot m 3) 2))
 
 (defn loop-until-negative
- [f m]
- (loop [x m
-        xs []]
-  (if (< x 0)
-    xs
-    (recur (f x) (conj xs (f x))))))
+  [f m]
+  (loop [x m
+         xs []]
+    (if (< x 0)
+      xs
+      (recur (f x) (conj xs (f x))))))
 
 (defn sum-of-map-fn
   [fn ms]
@@ -48,7 +48,9 @@
 
 (defn program
   [mem noun verb]
-  (assoc mem 1 noun 2 verb) )
+  (assoc mem 1 noun 2 verb))
+
+;; (program mem n v)
 
 ;; read at index
 ;; (nth [0 1 2] 2)
@@ -88,9 +90,30 @@
 
 ;; determine what pair of inputs produces the output 19690720
 
+(defn calculate
+  [ints]
+  (first (compute ints)))
+
+(defn mult-plus
+  [noun verb]
+  (+ (* 100 noun) verb))
+
+
+(defn cartesian-product
+  [s]
+  (for [x s
+        y s]
+    (vector x y)))
+;; works
+;; calculate program with input cartesian product
+;; until output is 19690720
+
+(defn iterate-until
+  [])
+
 (deftest day-2-test
   (testing "day-2"
     (is (= (count day-2-input-seq) 165))
-    (is (= (first (compute day-2-input-vec-ints)) 4462686))))
+    (is (= (calculate (program day-2-input-vec-ints 12 2))) 4462686)))
 
 
