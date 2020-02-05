@@ -98,8 +98,8 @@
 ;; until output is 19690720
 
 (defn calculate-until
-  [vs start end]
-  (loop [pairs (cartesian-product (range start end))
+  [vs]
+  (loop [pairs (cartesian-product (range 1 100))
          offset 0]
     (when (> (count pairs) offset)
       (let [[noun verb] (nth pairs offset)]
@@ -107,12 +107,47 @@
           (mult-plus noun verb)
           (recur pairs (inc offset)))))))
 
-;;works? 5936 (calculate-until day-2-input-vec-ints 1 100)
+;;works 5936 (calculate-until day-2-input-vec-ints 1 100)
 
 (deftest day-2-test
   (testing "day-2"
-    (is (= (count day-2-input-seq) 165))
-    (is (= (calculate (program day-2-input-vec-ints 12 2))) 4462686)
-    (is (= (calculate-until day-2-input-vec-ints 1 100) 5936))))
+    (is (= (count day-2-input-seq)
+           165))
+    (is (= (calculate (program day-2-input-vec-ints 12 2)))
+        4462686)
+    (is (= (calculate-until day-2-input-vec-ints)
+           5936))))
+
+(deftest day-3-test
+  (testing "day-3"
+    (is (= 1
+           1))))
+
+
+(def first-wire  "R8,U5,L5,D3")
+
+(def second-wire "U7,R6,D4,L4")
+
+;; distance is 3 + 3 = 6
+(defn split-on-commas
+  [s]
+  (map #(s/split % #"") (s/split s #",")))
+
+(split-on-commas first-wire)
+
+;; [[0, 0] [0, 1], ... ]
+
+;; intersections have same x and same y
+
+;; given a string representation of a wire, return a list of points
+;; each with its coordinates
+;; iterate on first wire points and
+;; for each point at x,y ,
+;; test if the second wire has a point at the same coordinates x, y
+;; if yes, add coordinates x, y to the list of the coordinates to return
+;; if no, continue until end of first wire.
+
+;; then, find the max manhattan distance of all the list of intersection coordinates and return it
+
 
 
