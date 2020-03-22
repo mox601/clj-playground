@@ -144,10 +144,13 @@
 (defn command-to-range
   [c end]
   (case c
-    "R" (range  1 (inc end))
-    "L" (range (dec (- 0 end)) 0)))
+    ("R" "U") (range  1 (inc end))
+    ("L" "D") (map #(- 0 %) (range 1 (inc end)))))
 
+(command-to-range "R" 2)
 (command-to-range "L" 2)
+(command-to-range "U" 2)
+(command-to-range "D" 2)
 
 ;;; given [[0 0] ["R" "8"]] return [0 0] [1 0] [2 0]...[8 0]
 (defn to-points
