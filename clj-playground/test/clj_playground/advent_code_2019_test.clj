@@ -140,6 +140,29 @@
 ;; intersections have same x and same y
 
 ;; given a string representation of a wire, return a list of points
+
+(defn command-to-range
+  [c end]
+  (case c
+    "R" (range  1 (inc end))
+    "L" (range (dec (- 0 end)) 0)))
+
+(command-to-range "L" 2)
+
+;;; given [[0 0] ["R" "8"]] return [0 0] [1 0] [2 0]...[8 0]
+(defn to-points
+  [start-c command]
+  (map (fn [s] (vec [(+ (nth start-c 1) s)
+                     (nth start-c 0)]))
+       (command-to-range (nth command 0)
+                         (Integer/parseInt (nth command 1)))))
+  
+(to-points [0 0] ["R" "8"])
+(to-points [0 1] ["R" "8"])
+
+(to-points [0 0] ["L" "8"])
+;; TODO handle ULD commands
+
 ;; each with its coordinates
 ;; iterate on first wire points and
 ;; for each point at x,y ,
