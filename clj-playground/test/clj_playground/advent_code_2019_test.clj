@@ -133,38 +133,72 @@
   [s]
   (map #(s/split % #"") (s/split s #",")))
 
-(split-on-commas first-wire)
-
-;; [[0, 0] [0, 1], ... ]
-
 ;; intersections have same x and same y
 
 ;; given a string representation of a wire, return a list of points
 
-(defn command-to-range
-  [c end]
-  (case c
-    ("R" "U") (range  1 (inc end))
-    ("L" "D") (map #(- 0 %) (range 1 (inc end)))))
+(defn direction-to-range
+  [direction distance]
+  (case direction
+    ("R" "U") (range  1 (inc distance))
+    ("L" "D") (map #(- 0 %) (range 1 (inc distance)))))
 
-(command-to-range "R" 2)
-(command-to-range "L" 2)
-(command-to-range "U" 2)
-(command-to-range "D" 2)
+(direction-to-range "R" 2) ;; 1 2
+(direction-to-range "L" 2) ;; -1 -2
+(direction-to-range "U" 2)
+(direction-to-range "D" 2)
+
+(defn dir-to-vec
+  [direction x-start y-start s]
+  (case direction
+    ("R" "L") (vec [(+ x-start s) y-start])
+    ("U" "D") (vec [x-start (+ y-start s)])))
+
+(dir-to-vec "R" 0 0 3)
+(dir-to-vec "D" 0 0 3)
 
 ;;; given [[0 0] ["R" "8"]] return [0 0] [1 0] [2 0]...[8 0]
-(defn to-points
+(defn to-segment
   [start-c command]
-  (map (fn [s] (vec [(+ (nth start-c 1) s)
-                     (nth start-c 0)]))
-       (command-to-range (nth command 0)
-                         (Integer/parseInt (nth command 1)))))
-  
-(to-points [0 0] ["R" "8"])
-(to-points [0 1] ["R" "8"])
+  (let [x-start (nth start-c 0)
+        y-start (nth start-c 1)
+        direction (nth command 0)
+        distance  (Integer/parseInt (nth command 1))]
+    (vec (map (fn [s]  (dir-to-vec direction x-start y-start s))
+              (direction-to-range direction distance)))))
 
-(to-points [0 0] ["L" "8"])
-;; TODO handle ULD commands
+(to-segment [0 0] ["R" "2"])
+(to-segment [0 1] ["R" "2"])
+(to-segment [0 0] ["L" "2"])
+(to-segment [0 0] ["U" "2"])
+(to-segment [0 0] ["D" "2"])
+;;ok
+
+(split-on-commas first-wire)
+(def test-wire [["R" "2"] ["U" "2"]])
+(map (fn [c] (to-segment [0 0] c)) test-wire)
+;; TODO use last point of previous segment to start next segment
+;; loop [starting-point input-wire output-wire]
+;; recur new starting-point
+
+(defn commands-to-segments
+  [cmds]
+  (loop [starting-point [0 0]
+         input-commands cmds
+         offset 0
+         output-wire []]
+    (if (> (count input-commands) offset)
+      (do
+        (println output-wire)
+      (let [segment (to-segment starting-point (nth input-commands offset))]
+        (recur (last segment) input-commands (inc offset) (conj output-wire segment))))
+      (apply concat output-wire))))
+
+(commands-to-segments [["R" "2"] ["U" "2"]])
+;;ok
+
+;; [[0, 0] [0, 1], ... ]
+
 
 ;; each with its coordinates
 ;; iterate on first wire points and
