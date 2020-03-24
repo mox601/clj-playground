@@ -133,6 +133,8 @@
   [s]
   (map #(s/split % #"") (s/split s #",")))
 
+(split-on-commas first-wire)
+
 ;; intersections have same x and same y
 
 ;; given a string representation of a wire, return a list of points
@@ -174,11 +176,8 @@
 (to-segment [0 0] ["D" "2"])
 ;;ok
 
-(split-on-commas first-wire)
-(def test-wire [["R" "2"] ["U" "2"]])
-(map (fn [c] (to-segment [0 0] c)) test-wire)
-;; TODO use last point of previous segment to start next segment
 ;; loop [starting-point input-wire output-wire]
+;; use last point of previous segment to start next segment
 ;; recur new starting-point
 
 (defn commands-to-segments
@@ -188,12 +187,11 @@
          offset 0
          output-wire []]
     (if (> (count input-commands) offset)
-      (do
-        (println output-wire)
       (let [segment (to-segment starting-point (nth input-commands offset))]
-        (recur (last segment) input-commands (inc offset) (conj output-wire segment))))
+        (recur (last segment) input-commands (inc offset) (conj output-wire segment)))
       (apply concat output-wire))))
 
+(def test-wire [["R" "2"] ["U" "2"]])
 (commands-to-segments [["R" "2"] ["U" "2"]])
 ;;ok
 
