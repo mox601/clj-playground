@@ -125,14 +125,14 @@
            1))))
 
 
-(def first-wire  "R8,U5,L5,D3")
+(def first-wire  "R8,U5,L5,D300")
 
 (def second-wire "U7,R6,D4,L4")
 
 ;; distance is 3 + 3 = 6
 (defn split-on-commas
   [s]
-  (map #(s/split % #"") (s/split s #",")))
+  (map #(vec [(subs % 0 1) (subs % 1)]) (s/split s #",")))
 
 (split-on-commas first-wire)
 
@@ -202,6 +202,7 @@
  (set (commands-to-segments [["R" "2"] ["U" "2"]]))
  (set (commands-to-segments [["U" "2"] ["R" "2"]]))
  (set (commands-to-segments [["U" "3"] ["R" "2"] ["D" "1"]])))
+;; #{[2 2]}
 
 ;;ok!
 
@@ -215,5 +216,48 @@
 ;; if yes, add coordinates x, y to the list of the coordinates to return
 ;; if no, continue until end of first wire.
 
+
+(defn manhattan-distance
+  [point]
+    (+ (Math/abs (nth point 0))
+       (Math/abs (nth point 1))))
+
+(manhattan-distance [0 0])
+(manhattan-distance [1 1])
+(manhattan-distance [1 -1])
+(manhattan-distance [-1 -1])
+
 ;; then, find the max manhattan distance of all the list of intersection coordinates and return it
+(defn min-manhattan-distance
+  [points]
+  (apply min (map manhattan-distance points)))
+
+(min-manhattan-distance [[1 0] [0 1] [3 3] [-3 -4]])
+
+;; read file day-3.txt 
+(def day-3-input
+  (io/resource "resources/advent2019/day-3.txt"))
+;; split on new lines
+
+(defn res-to-commands
+  ""
+  [url-input]
+  (map split-on-commas (s/split-lines (slurp url-input))))
+
+(def first-wire-input (nth (res-to-commands day-3-input) 0))
+
+(def second-wire-input (nth (res-to-commands day-3-input) 1))
+
+(commands-to-segments first-wire-input)
+
+(def intersections
+  (sets/intersection
+ (set (commands-to-segments first-wire-input))
+ (set (commands-to-segments second-wire-input))))
+
+
+(min-manhattan-distance intersections)
+;;865
+;;OK!
+
 
