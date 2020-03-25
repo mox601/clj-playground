@@ -1,7 +1,8 @@
 (ns clj-playground.advent-code-2019-test
   (:require [clojure.test    :refer :all])
   (:require [clojure.string  :as s])
-  (:require [clojure.java.io :as io]))
+  (:require [clojure.java.io :as io])
+  (:require [clojure.set     :as sets]))
 
 (def day-1-input
   (io/resource "resources/advent2019/day-1.txt"))
@@ -193,7 +194,16 @@
 
 (def test-wire [["R" "2"] ["U" "2"]])
 (commands-to-segments [["R" "2"] ["U" "2"]])
+(commands-to-segments [["R" "2"] ["D" "2"] ["L" "2"] ["U" "2"]])
 ;;ok
+
+
+(sets/intersection
+ (set (commands-to-segments [["R" "2"] ["U" "2"]]))
+ (set (commands-to-segments [["U" "2"] ["R" "2"]]))
+ (set (commands-to-segments [["U" "3"] ["R" "2"] ["D" "1"]])))
+
+;;ok!
 
 ;; [[0, 0] [0, 1], ... ]
 
